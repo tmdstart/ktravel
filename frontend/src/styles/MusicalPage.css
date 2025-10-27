@@ -1,0 +1,373 @@
+/* styles/MusicalPage.css */
+
+/* --- 기본 스타일 및 레이아웃 --- */
+
+.musical-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.page-header h1 {
+    font-size: 2.2rem;
+}
+
+/* ---------------------------------------------------- */
+/* 🌟 레이아웃 구조 수정: 좌/우 분할 및 좌측 수직 배치 */
+/* ---------------------------------------------------- */
+.content-wrapper {
+    display: flex;
+    gap: 20px; 
+}
+
+/* 🌟 좌측 영역 래퍼: 캘린더와 이벤트 목록을 수직으로 묶습니다. */
+.calendar-side-wrapper {
+    flex-basis: 350px; /* 좌측 영역 너비 고정 */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 캘린더와 이벤트 목록 사이 간격 */
+    max-width: 350px; 
+}
+
+/* 캘린더 섹션 (좌측 상단) */
+.calendar-section {
+    flex-basis: auto; 
+    flex-shrink: 0;
+    /* 🌟 캘린더 자체만 박스 스타일을 갖도록, 이 섹션에는 스타일 제거 */
+}
+
+/* ⚠️ 클래스 이름 변경: festival-list-section -> musical-list-section */
+.musical-list-section {
+    /* 🌟 남은 공간을 모두 사용하도록 함 */
+    flex-grow: 1; 
+    /* 🌟 (필수) 좌측 영역이 들어올 공간을 확보하도록 최소 너비를 해제하거나 줄입니다. */
+    min-width: 400px; /* 350px은 너무 작을 수 있으니 400px 이상 권장 */
+    /* min-width: auto; 로 설정하여 유연하게 조정할 수도 있습니다. */
+}
+
+/* --- 캘린더 스타일 (react-calendar 오버라이드) --- */
+
+.calendar-box {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* 🌟 캘린더의 외부 패딩과 이벤트 목록의 외부 패딩을 일치시켜야 합니다. */
+    padding: 10px; 
+}
+
+.react-calendar {
+    width: 100%;
+    border: none;
+    line-height: 1.125em;
+}
+
+.event-dot {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff007f; /* K-POP 핑크 유지 */
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+}
+
+.react-calendar__tile {
+    position: relative; 
+    height: 48px; 
+}
+
+
+/* ---------------------------------------------------- */
+/* 🌟 캘린더 이벤트 목록 섹션 스타일링 (너비 일치 조정 완료) */
+/* ---------------------------------------------------- */
+.calendar-events-section {
+    /* 캘린더 박스와 너비를 맞추기 위해 캘린더 박스의 스타일을 복사합니다. */
+    background-color: #ffffff;
+    border-radius: 8px; /* 캘린더 박스와 동일 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 캘린더 박스와 동일 */
+    
+    /* 🌟 캘린더 박스 내부 패딩(10px)과 동일하게 설정하여 콘텐츠 정렬을 맞춥니다. */
+    padding: 10px; 
+    
+    width: 100%;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 (안전성 확보) */
+}
+
+.calendar-events-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px; 
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.calendar-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.calendar-event-item {
+    display: flex;
+    align-items: flex-start;
+    font-size: 0.9rem;
+    padding: 3px 0;
+}
+
+.event-icon {
+    width: 6px; 
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 5px; 
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.event-title {
+    flex-grow: 1;
+    color: #555;
+    font-size: 0.80rem; /* 축소된 폰트 크기 유지 */
+    white-space: normal; /* 긴 제목이 여러 줄에 걸치도록 수정 */
+}
+
+.event-date {
+    font-size: 0.75rem; 
+    color: #777;
+    flex-shrink: 0;
+    margin-left: 10px;
+    white-space: nowrap; /* 날짜가 줄 바꿈되지 않도록 설정 */
+}
+
+/* 🌟 더 보기 메시지 스타일 (선택 사항) */
+.more-events-message {
+    font-size: 0.8rem;
+    color: #007bff;
+    text-align: right;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+
+/* ---------------------------------------------------- */
+/* --- 뮤지컬 목록 섹션 (우측 카드 영역) --- */
+/* ---------------------------------------------------- */
+
+/* 제목과 검색 창 레이아웃 */
+/* ⚠️ 클래스 이름 변경: festival-header-wrapper -> musical-header-wrapper */
+.musical-header-wrapper {
+    display: flex;
+    align-items: center; 
+    gap: 250px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* <h2> 태그 스타일 재조정 */
+/* ⚠️ 클래스 이름 변경: festival-list-section -> musical-list-section */
+.musical-list-section h2 {
+    margin: 0; 
+    padding: 0;
+    font-size: 1.5rem; 
+    color: #444;
+    flex-shrink: 0;
+    margin-right: 0px;
+}
+
+/* 검색 창 스타일 */
+/* ⚠️ 클래스 이름 변경: festival-search-bar -> musical-search-bar */
+.musical-search-bar {
+    flex-grow: 1; 
+    margin-bottom: 0; 
+    max-width: 280px;
+}
+
+.musical-search-bar input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.musical-search-bar input:focus {
+    /* ⚠️ 포커스 색상 유지 */
+    border-color: #ff007f; 
+    outline: none;
+}
+
+
+/* 카드 그리드 */
+/* ⚠️ 클래스 이름 변경: festival-cards-grid -> musical-cards-grid */
+.musical-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+/* ⚠️ 클래스 이름 변경: festival-card-container -> musical-card-container */
+.musical-card-container {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden; 
+    max-width: 100%; 
+    padding: 10px; 
+    /* ⚠️ 경계선 색상 유지 */
+    border: 1px solid #992859; 
+}
+
+/* ⚠️ 클래스 이름 변경: festival-card-image-box -> musical-card-image-box */
+.musical-card-image-box {
+    flex-basis: 120px; 
+    flex-shrink: 0;
+    margin-right: 75px; 
+}
+
+/* ⚠️ 클래스 이름 변경: festival-card-image -> musical-card-image */
+.musical-card-image {
+    width: 150%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* 카드 상세 정보 */
+/* ⚠️ 클래스 이름 변경: festival-card-details -> musical-card-details */
+.musical-card-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ⚠️ 클래스 이름 변경: festival-card-title -> musical-card-title */
+.musical-card-title {
+    font-size: 1.1rem;
+    /* ⚠️ 제목 색상 유지 */
+    color: #ff007f; 
+    margin-top: 0;
+    margin-bottom: 3px;
+}
+
+/* ⚠️ 클래스 이름 변경 */
+.musical-card-date,
+.musical-card-place,
+.musical-card-genre,
+.musical-card-restriction {
+    margin-bottom: 1px;
+    color: #555;
+    font-size: 0.85rem; 
+}
+
+/* ⚠️ 클래스 이름 변경: festival-card-date -> musical-card-date */
+.musical-card-date {
+    font-weight: bold;
+    color: #333;
+}
+
+.get-tickets-button {
+    align-self: flex-start;
+    margin-top: 5px;
+    padding: 8px 15px;
+    font-size: 0.9rem; 
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+.get-tickets-button:hover {
+    background-color: #45a049;
+}
+
+
+/* --- 페이지네이션 스타일 --- */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px 0;
+}
+
+.pagination-controls button {
+    background-color: #e0e0e0;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 6px 12px; 
+    font-size: 0.9rem; 
+    margin: 0 3px; 
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: normal;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination-controls button:hover:not(.active) {
+    background-color: #d0d0d0;
+}
+
+.pagination-controls button.active {
+    background-color: #888;
+    color: white;
+    border-color: #888;
+    font-weight: bold;
+}
+
+
+/* --- 반응형 디자인 --- */
+@media (max-width: 900px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .calendar-side-wrapper {
+        flex-basis: auto; 
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .calendar-section,
+    .calendar-events-section,
+    /* ⚠️ 클래스 이름 변경: festival-list-section -> musical-list-section */
+    .musical-list-section {
+        min-width: auto;
+    }
+    
+    /* ⚠️ 클래스 이름 변경: festival-card-container -> musical-card-container */
+    .musical-card-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* ⚠️ 클래스 이름 변경: festival-card-image-box -> musical-card-image-box */
+    .musical-card-image-box {
+        margin-right: 0;
+        margin-bottom: 10px;
+        max-width: 300px;
+    }
+    
+    .get-tickets-button {
+        align-self: center;
+    }
+}
