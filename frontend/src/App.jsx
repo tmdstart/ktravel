@@ -10,6 +10,8 @@ import Kpop_ChatbotMapLayout from './pages/Kpop_ChatbotMapLayout.jsx';
 import KFood_ChatbotMapLayout from './pages/KFood_ChatbotMapLayout.jsx';
 import FestivalPage from './pages/FestivalPage.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import KPathIntegrationPage from './pages/KPathIntegrationPage.jsx';
+import KPathIdeaPage from './pages/KPathIdeaPage.jsx';
 console.log('CLIENT_ID:', process.env.REACT_APP_NAVER_MAPS_CLIENT_ID);
 
 
@@ -50,6 +52,7 @@ function App() {
                         <Route path="/festival" element={<KpopFestival_MapLayout />} />
                         <Route path="/chatbot/demon-hunters" element={<KDH_ChatbotMapLayout />} />
                         <Route path="/festivals" element={<FestivalPage />} />
+                        <Route path="/k-pathidea" element={<KPathIdeaPage />} />
 
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>

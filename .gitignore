@@ -45,3 +45,19 @@ backend/app/database/__pycache__/connection.cpython-311.pyc
 
 get-docker.sh
 test/
+backend/app/database/queries/__pycache__/concert_queries.cpython-311.pyc
+backend/app/schemas/__pycache__/festival_schema.cpython-311.pyc
+backend/app/api/endpoints/__pycache__/map_search.cpython-311.pyc
+backend/app/api/endpoints/__pycache__/weather.cpython-311.pyc
+backend/app/models/__pycache__/festival.cpython-311.pyc
+backend/app/schemas/__pycache__/__init__.cpython-311.pyc
+backend/app/schemas/__pycache__/conversation_schema.cpython-311.pyc
+backend/app/schemas/__pycache__/destination_schema.cpython-311.pyc
+backend/app/models/__pycache__/destination.cpython-311.pyc
+backend/app/models/__pycache__/users.cpython-311.pyc
+backend/app/api/endpoints/__pycache__/odsay.cpython-311.pyc
+backend/app/models/__pycache__/conversation.cpython-311.pyc
+backend/app/schemas/__pycache__/user_schema.cpython-311.pyc
+
+backend/app/schemas/__pycache__/user_schema.cpython-311.pyc
+*.pyc
