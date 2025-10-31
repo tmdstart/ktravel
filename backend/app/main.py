@@ -1,11 +1,11 @@
 """
 FastAPI 메인 애플리케이션
 """
-from app.api.endpoints import festival,map_search,odsay
+from app.api.endpoints import concert, auth, chat, destinations, map_search,odsay,festival
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.endpoints import auth, chat, destinations
+
 
 # FastAPI 앱 생성
 app = FastAPI(
@@ -30,6 +30,7 @@ app.include_router(destinations.router, prefix="/api")
 app.include_router(festival.router)
 app.include_router(map_search.router, prefix="/search") 
 app.include_router(odsay.router)
+app.include_router(concert.router)
 
 # Health Check
 @app.get("/")

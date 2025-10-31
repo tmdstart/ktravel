@@ -1,0 +1,504 @@
+/* kpath_styles.css - 순수 CSS */
+
+/* 애니메이션 키프레임 (Loader용) */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- 컨테이너 및 레이아웃 스타일 --- */
+.kpath-container-map-only {
+    width: 100%;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+}
+
+/* --- 검색 폼 스타일 --- */
+.kpath-search-form {
+    display: flex;
+    gap: 0.5rem; /* space-x-2 */
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-md */
+}
+
+.kpath-search-input {
+    flex: 1 1 0%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    outline: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.kpath-search-input:focus {
+    border-color: #3b82f6; 
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); 
+}
+
+.kpath-search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background-color: #4f46e5; /* indigo-600 */
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.15s ease-in-out;
+    border: none;
+    cursor: pointer;
+}
+.kpath-search-button:hover {
+    background-color: #4338ca; /* hover:indigo-700 */
+}
+.kpath-search-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- 경로 컨트롤 박스 --- */
+.kpath-route-control-box {
+    display: flex;
+    align-items: stretch;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb; /* divide-x divide-gray-200 대체 */
+}
+.kpath-control-item {
+    flex: 1 1 0%;
+    font-size: 0.875rem;
+    padding: 0.5rem;
+}
+.kpath-control-item:not(:last-child) {
+    border-right: 1px solid #e5e7eb;
+}
+
+.kpath-bold-text {
+    font-weight: 700;
+}
+
+.kpath-generate-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    background-color: #10b981; /* green-600 */
+    color: #fff;
+    font-weight: 700;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    border: none;
+    cursor: pointer;
+    min-width: 150px;
+}
+.kpath-generate-button:hover {
+    background-color: #059669;
+}
+.kpath-generate-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.kpath-generate-button-selecting {
+    background-color: #f59e0b; /* yellow-500 */
+}
+.kpath-generate-button-selecting:hover {
+    background-color: #d97706; /* hover:yellow-600 */
+}
+
+/* --- 상태 메시지 --- */
+.kpath-message-box {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+.kpath-message-box.loading {
+    background-color: #fffbe6; /* yellow-100 */
+    color: #b58900; 
+}
+.kpath-message-box.success {
+    background-color: #eff6ff; /* blue-100 */
+    color: #1d4ed8; 
+}
+.kpath-message-text {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* --- 지도 컨테이너 --- */
+.kpath-map-outer-container {
+    width: 100%;
+    height: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* --- 경로 요약 및 상세 정보 --- */
+.kpath-route-summary-box {
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.kpath-summary-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #1d4ed8;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.kpath-summary-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    background-color: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+}
+
+.kpath-detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* space-y-3 */
+    padding-top: 0.5rem;
+}
+
+/* ---------------------------------------------------- */
+/* --- ⭐️ SubPathItem 상세 경로 스타일 추가 --- */
+/* ---------------------------------------------------- */
+
+.subpath-item {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border-left: 4px solid; /* 색상 구분을 위한 왼쪽 경계선 */
+    transition: background-color 0.15s ease-in-out;
+}
+
+.subpath-header {
+    display: flex;
+    align-items: flex-start;
+}
+
+.subpath-icon {
+    flex-shrink: 0;
+    margin-right: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.subpath-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.subpath-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.subpath-info .desc {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+/* --- Segment별 색상 테마 --- */
+
+.subpath-item.segment.subway {
+    border-left-color: #3b82f6; /* Blue-500 */
+    background-color: #eff6ff; /* Blue-50 */
+}
+.subpath-item.segment.subway .desc {
+    color: #1d4ed8; /* Blue-700 */
+}
+.subpath-item.segment.subway .icon.subway {
+    color: #2563eb; /* Blue-600 */
+}
+
+.subpath-item.segment.bus {
+    border-left-color: #10b981; /* Green-500 */
+    background-color: #ecfdf5; /* Green-50 */
+}
+.subpath-item.segment.bus .desc {
+    color: #047857; /* Green-700 */
+}
+.subpath-item.segment.bus .icon.bus {
+    color: #16a34a; /* Green-600 */
+}
+
+.subpath-item.segment.walk {
+    border-left-color: #9ca3af; /* Gray-400 */
+    background-color: #f9fafb; /* Gray-50 */
+}
+.subpath-item.segment.walk .desc {
+    color: #4b5563; /* Gray-600 */
+}
+.subpath-item.segment.walk .icon.walk {
+    color: #6b7280; /* Gray-500 */
+}
+
+.subpath-item.segment.transfer {
+    border-left-color: #f87171; /* Red-400 */
+    background-color: #fef2f2; /* Red-50 */
+}
+.subpath-item.segment.transfer .desc {
+    color: #b91c1c; /* Red-700 */
+}
+.subpath-item.segment.transfer .icon.transfer {
+    color: #dc2626; /* Red-600 */
+}
+
+/* --- 경유역 상세 정보 및 버튼 --- */
+.pass-stops {
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    background-color: rgba(255, 255, 255, 0.7); /* 배경색을 투명하게 */
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.subpath-item.segment.subway .pass-stops {
+    background-color: #dbeafe; /* Blue-100 */
+}
+
+.toggle-stops-btn {
+    font-size: 0.875rem; 
+    color: #4f46e5; /* Indigo-600 */
+    font-weight: 500; 
+    margin-top: 0.25rem; 
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease-in-out;
+}
+.toggle-stops-btn:hover {
+    color: #3730a3; /* hover:Indigo-800 */
+}
+
+/* kpath-custom-marker.css (또는 기존 KPathIdeaPage.css에 추가) */
+
+/*
+* 마우스 오버 시 메모 표시를 위한 기본 스타일
+*/
+
+/* 마커와 라벨, 메모를 담는 전체 래퍼 */
+.kpath-custom-marker-wrapper {
+    /* HTML 인라인 스타일로 대부분 처리되었으나, 호버 효과를 위해 */
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* 마커 이름 (상시 표시) */
+.kpath-marker-label {
+    transition: transform 0.2s ease;
+}
+
+/* 마커 메모 (기본 숨김, 호버 시 표시) */
+.kpath-marker-memo {
+    /* 인라인 스타일로 display: none; 처리됨 */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none; /* 클릭 이벤트가 마커를 통과하도록 설정 */
+}
+
+/* 마커 래퍼에 마우스를 올렸을 때 메모를 표시 */
+/* HTML 문자열 내 style 태그 대신 외부에서 정의하면 더 깔끔함 */
+.kpath-custom-marker-wrapper:hover .kpath-marker-memo {
+    /* 인라인 style 태그의 display: block;을 덮어쓰거나, 
+       인라인 style 태그를 제거하고 이 외부 CSS를 사용하는 것을 권장 */
+    display: block !important; /* 인라인 스타일을 강제 덮어쓰기 위해 */
+    opacity: 1;
+}
+
+/* src/styles/kpath-custom-marker.css */
+/* src/styles/kpath-custom-marker.css */
+
+/* --- 1. 전체 래퍼 및 기본 설정 --- */
+.kpath-custom-marker-wrapper {
+    /* 기존 인라인 스타일 */
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    /* 핀 이미지가 라벨/메모와 함께 위치하도록 설정 */
+}
+
+/* 마커 이미지 크기 */
+.kpath-marker-img {
+    width: 30px;
+    height: 42px;
+    display: block;
+    /* transition: transform 0.2s; (선택 사항) */
+}
+
+/* --- 2. 마커 이름 (상시 표시) --- */
+.kpath-marker-label {
+    /* 위치 및 레이아웃 */
+    position: absolute;
+    bottom: 40px; /* 마커 이미지 위쪽에 위치 */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* 디자인: 투명 배경, 검은색 글씨, 흰색 테두리 */
+    padding: 4px 8px;
+    background: transparent; /* 투명 배경 */
+    color: #000000; /* 검은색 글씨 */
+    border-width: 1px;
+    border-style: solid;
+    /* border-color는 useMapLogic에서 인라인으로 설정됨 (마커 색상 유지) */
+    border-radius: 4px;
+    
+    /* 폰트 및 기타 */
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 90;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* --- 3. 마우스 오버 메모 (숨김 상태) --- */
+.kpath-marker-memo {
+    display: inline-block; /* 가로로 펼쳐지도록 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    /* 너무 길어지는 것 제한 */
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.3;
+    position: absolute;
+    top: -60px; /* 마커 위에 배치 */
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none; /* 마우스 이벤트 방해 금지 */
+    opacity: 0; /* 기본 숨김 */
+    transition: opacity 0.2s ease-in-out;
+    z-index: 9999;
+}
+
+
+/* --- 4. 호버 효과 --- */
+.kpath-custom-marker-wrapper:hover .kpath-marker-memo {
+    display: block;
+}
+
+/* 마커 이름의 테두리 색상을 흰색으로 고정하려면 아래를 추가 (선택 사항) */
+.kpath-marker-label {
+    border-color: #FFFFFF !important;
+}
+
+/* --- 모달 오버레이: 화면 전체를 덮고 중앙에 배치 --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 지도 위 표시 */
+}
+
+/* --- 모달 내용 상자 --- */
+.kpath-memo-modal {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    width: 90%;
+    max-width: 450px;
+    box-sizing: border-box;
+}
+
+/* --- 모달 제목 --- */
+.kpath-modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* --- 라벨 --- */
+.kpath-memo-modal label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+}
+
+/* --- 입력창과 텍스트 영역 --- */
+.kpath-memo-modal input,
+.kpath-memo-modal textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    resize: vertical; /* textarea만 세로 크기 조절 가능 */
+}
+
+/* --- 버튼 영역 --- */
+.modal-actions {
+    margin-top: 25px;
+    text-align: right;
+}
+
+/* --- 버튼 공통 스타일 --- */
+.btn-cancel,
+.btn-save {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* --- 취소 버튼 --- */
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+/* --- 저장 버튼 --- */
+.btn-save {
+    background-color: #007bff;
+    color: #fff;
+}

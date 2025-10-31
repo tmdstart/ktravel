@@ -1,0 +1,406 @@
+/* * KPathIntegrationPage.css 
+ * 모든 컴포넌트 (통합, 지도, 일정 테이블)에서 사용하는 스타일을 통합 관리합니다.
+ * 'K-Path 여행 플래너' UI 디자인을 기반으로 레이아웃과 색상을 업데이트합니다.
+ */
+
+/* ==================================== */
+/* 0. 통합 페이지 레이아웃 (kpath-container-main) */
+/* ==================================== */
+
+/* min-h-screen bg-gray-50 flex flex-col p-4 sm:p-8 font-sans */
+.kpath-container-main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* 모바일 기본 */
+    padding: 1rem;
+    font-family: 'Inter', 'system-ui', 'sans-serif'; 
+}
+
+@media (min-width: 640px) {
+    .kpath-container-main {
+        padding: 1rem;
+    }
+}
+
+/* 데스크톱 (lg: 1024px)에서 가로 배열로 전환 */
+@media (min-width: 1024px) {
+    .kpath-container-main {
+        flex-direction: row;
+        align-items: stretch;
+        padding: 0; /* 전체 화면 사용을 위해 외부 패딩 제거 */
+        gap: 1.5rem; /* 좌우 컨테이너 간격 */
+    }
+}
+
+/* ==================================== */
+/* 1. 왼쪽 일정 관리 패널 (w-1/3) */
+/* ==================================== */
+
+/* .kpath-schedule-panel: 왼쪽 1/3 영역 컨테이너 */
+.kpath-schedule-panel {
+    background-color: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+    
+    /* 데스크톱 레이아웃 (lg: 1024px) */
+    width: 100%; /* 모바일 기본 */
+    flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+    .kpath-schedule-panel {
+        width: 350px; /* 고정 너비 설정 */
+        min-height: calc(100vh - 3rem); /* 화면 높이 전체를 차지 (Gap 1.5rem 고려) */
+        overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+        margin-left: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ==================================== */
+/* 2. 오른쪽 지도/검색 패널 (w-2/3) */
+/* ==================================== */
+
+/* .kpath-map-panel: 오른쪽 2/3 영역 컨테이너 */
+.kpath-map-panel {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 남은 공간 모두 차지 */
+    
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 1024px) {
+    .kpath-schedule-panel {
+        /* [수정] 고정 너비 350px 대신 50%로 설정 */
+        width: 20%;
+        /* [추가] 남은 공간을 균등하게 차지하도록 설정 */
+        flex-grow: 1; 
+        
+        min-height: calc(100vh - 3rem); 
+        overflow-y: auto; 
+        margin-left: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ==================================== */
+/* 3. 공통 헤더 및 제목 스타일 */
+/* ==================================== */
+
+.kpath-header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+}
+
+.kpath-header-subtitle {
+    font-size: 1rem;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+}
+
+/* ==================================== */
+/* 4. 장소 찾기 검색 폼 스타일 (오른쪽 지도 패널 상단) */
+/* ==================================== */
+
+/* kpath-search-form (오른쪽 상단의 검색바와 버튼 그룹) */
+.kpath-search-form {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0; /* 구분선 */
+    gap: 0.75rem;
+}
+
+.kpath-search-input {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 150ms ease-in-out; 
+}
+
+.kpath-search-input:focus {
+    outline: none;
+    border-color: #4299e1;
+}
+
+/* 지도 검색 버튼 (빨간색 - 지도 찾기) */
+.kpath-map-search-button {
+    background-color: #e53e3e; /* 빨간색 계열 */
+    color: white;
+    font-weight: 600; 
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(229, 62, 62, 0.4);
+    transition: background-color 150ms;
+    border: none;
+    cursor: pointer;
+}
+
+.kpath-map-search-button:hover {
+    background-color: #c53030;
+}
+
+/* ==================================== */
+/* 5. 버튼 그룹 스타일 (일정 관리 및 마커 관리) */
+/* ==================================== */
+
+/* 버튼 그룹 컨테이너 */
+.kpath-button-group {
+    display: flex;
+    flex-wrap: wrap; /* 모바일에서 줄 바꿈 */
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.kpath-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 150ms;
+    border: none;
+    cursor: pointer;
+    flex-grow: 1;
+    white-space: nowrap;
+    min-width: 120px;
+}
+
+/* 버튼 테마 */
+.kpath-btn.primary { /* 일정 추가 (파랑) */
+    background-color: #4299e1;
+    color: white;
+    box-shadow: 0 4px 6px rgba(66, 153, 225, 0.4);
+}
+.kpath-btn.primary:hover { background-color: #3182ce; }
+
+.kpath-btn.secondary { /* 행 추가 (보라) */
+    background-color: #9f7aea;
+    color: white;
+    box-shadow: 0 4px 6px rgba(159, 122, 234, 0.4);
+}
+.kpath-btn.secondary:hover { background-color: #805ad5; }
+
+.kpath-btn.danger { /* 선택 삭제 (회색) */
+    background-color: #e2e8f0;
+    color: #4a5568;
+    box-shadow: none;
+}
+.kpath-btn.danger:hover { background-color: #cbd5e0; }
+
+.kpath-btn.success { /* CSV 저장 (초록) */
+    background-color: #48bb78;
+    color: white;
+    box-shadow: 0 4px 6px rgba(72, 187, 120, 0.4);
+}
+.kpath-btn.success:hover { background-color: #38a169; }
+
+/* 오른쪽 마커 관리 버튼 */
+.kpath-btn.map-action-add { /* 마커 추가 (분홍) */
+    background-color: #f687b3;
+    color: white;
+    box-shadow: 0 4px 6px rgba(246, 135, 179, 0.4);
+}
+.kpath-btn.map-action-add:hover { background-color: #ed64a6; }
+
+.kpath-btn.map-action-remove { /* 마커 삭제 (밝은 회색) */
+    background-color: #ffffff;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+    box-shadow: none;
+}
+.kpath-btn.map-action-remove:hover { background-color: #f7fafc; }
+
+
+/* ==================================== */
+/* 6. 지도 컨테이너 스타일 */
+/* ==================================== */
+
+/* 지도 영역 (검색창 아래 나머지 공간) */
+.kpath-map-container-wrapper {
+    flex-grow: 1;
+    position: relative; /* 지도 상의 요소 배치를 위해 필요 */
+    min-height: 400px;
+    border-radius: 0 0 12px 12px; /* 하단만 둥글게 */
+    overflow: hidden;
+}
+
+/* 실제 지도 렌더링 영역 */
+#map {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* ==================================== */
+/* 7. 일정 테이블 스타일 (ScheduleTable.jsx용) */
+/* ==================================== */
+
+/* 일정 테이블을 감싸는 컨테이너 */
+.kpath-schedule-list-area {
+    height: auto;
+    overflow-y: hidden;
+    padding: 0;
+}
+
+.kpath-schedule-title-area {
+    font-size: 1.125rem; 
+    font-weight: 700; 
+    color: #2d3748; /* dark gray */
+    margin-bottom: 1rem; 
+    padding-bottom: 0.5rem;
+}
+
+.kpath-schedule-item {
+    padding: 0.75rem 1rem; 
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.1s;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.kpath-schedule-item:hover {
+    background-color: #f7fafc;
+}
+
+/* 선택된 항목 스타일 (지도에서 마커가 표시되는 항목) */
+.kpath-schedule-item.selected {
+    background-color: #ebf8ff; /* light blue */
+    border-left: 5px solid #4299e1; /* primary blue */
+    border-color: #4299e1;
+    font-weight: 600;
+}
+
+.kpath-schedule-item-name {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1rem;
+    flex-grow: 1;
+}
+
+.kpath-schedule-item-coords {
+    font-size: 0.75rem; 
+    color: #718096;
+    margin-left: 1rem;
+}
+
+
+/* ==================================== */
+/* 8. 아이콘 스타일 (lucide-react) */
+/* ==================================== */
+
+/* w-5 h-5 mr-2 */
+.kpath-icon-base {
+    width: 1.25rem; /* w-5 */
+    height: 1.25rem; /* h-5 */
+    margin-right: 0.5rem; /* mr-2 */
+}
+
+/* animate-spin */
+.kpath-icon-spin {
+    animation: kpath-spin 1s linear infinite;
+}
+
+@keyframes kpath-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+/* KPathIdeaPage.css (또는 관련 스타일 파일) */
+
+/* --- 모달 오버레이: 배경을 어둡게 하고 중앙에 배치 --- */
+.kpath-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 지도나 다른 UI보다 위에 표시 */
+}
+
+/* --- 모달 내용 상자 --- */
+.kpath-memo-modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    width: 90%;
+    max-width: 450px; /* 적절한 크기 제한 */
+}
+
+.kpath-modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.kpath-memo-modal-content label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.kpath-modal-input,
+.kpath-modal-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    resize: vertical; /* textarea만 세로 크기 조절 허용 */
+}
+
+/* --- 버튼 액션 영역 --- */
+.kpath-modal-actions {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.kpath-modal-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.kpath-btn-cancel {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.kpath-btn-save {
+    background: #007bff; /* 파란색 (스크린샷 참고) */
+    color: white;
+}
