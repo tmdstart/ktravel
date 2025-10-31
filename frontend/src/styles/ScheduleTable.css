@@ -1,0 +1,163 @@
+/* KScheduleTable.css */
+
+/* 전체 컨테이너 스타일 */
+.kschedule-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 1. 헤더 */
+.kschedule-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* 2. 상태 바 (Firebase 연결 완료 부분) */
+.kschedule-status-bar {
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    color: #594400;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 3. 일정 이름 입력 및 사용자 ID */
+.kschedule-details {
+    margin-bottom: 20px;
+}
+
+.kschedule-details label {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.kschedule-details input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* 4. 액션 버튼 그룹 */
+.kschedule-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.kschedule-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+}
+
+.kschedule-btn-primary { /* 새 일정 */
+    background-color: #409eff;
+    color: white;
+}
+.kschedule-btn-primary:hover {
+    background-color: #2b85e4;
+}
+
+.kschedule-btn-success { /* 행 추가 */
+    background-color: #5cb85c;
+    color: white;
+}
+.kschedule-btn-success:hover {
+    background-color: #4cae4c;
+}
+
+.kschedule-btn-info { /* 열 추가 */
+    background-color: #5bc0de;
+    color: white;
+}
+.kschedule-btn-info:hover {
+    background-color: #46b8da;
+}
+
+.kschedule-btn-download { /* CSV 다운로드 */
+    background-color: #34495e;
+    color: white;
+}
+.kschedule-btn-download:hover {
+    background-color: #2c3e50;
+}
+
+/* 5. 일정 테이블 */
+.kschedule-table-wrapper {
+    overflow-x: auto;
+}
+
+.kschedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    min-width: 700px;
+}
+
+.kschedule-table th, .kschedule-table td {
+    border: 1px solid #e0e0e0;
+    padding: 0;
+    height: 40px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.kschedule-table thead th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+    padding: 10px 0;
+}
+
+/* '시간' 헤더 및 셀 */
+.kschedule-table th:first-child,
+.kschedule-table .kschedule-time-cell {
+    width: 80px;
+    color: #333;
+    background-color: #f5f5f5;
+    font-weight: 500;
+}
+
+/* 실제 일정 셀 */
+.kschedule-schedule-cell {
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+
+.kschedule-schedule-cell:hover {
+    background-color: #f0f0f0;
+}
+
+/* 테이블 하단의 점 세개 */
+.kschedule-table-dots {
+    text-align: right;
+    margin-top: 5px;
+    font-size: 18px;
+    color: #999;
+}

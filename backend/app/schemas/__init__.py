@@ -34,17 +34,16 @@ from .conversation_schema import (
     ConversationHistory
 )
 
-# Festival 스키마들
-from .festival_schema import (
-    FestivalBase,
-    FestivalCreate,
-    FestivalUpdate,
-    FestivalResponse,
-    FestivalSummary,
-    FestivalsResponse,
-    OngoingFestivalsResponse,
-    FestivalSearch,
-    FestivalDateRange
+from .concert_schema import (
+    ConcertBase,
+    ConcertCreate,
+    ConcertUpdate,
+    ConcertResponse,
+    ConcertSummary,
+    ConcertsResponse,
+    OngoingConcertsResponse,
+    ConcertSearch,
+    ConcertDateRange
 )
 
 __all__ = [
@@ -61,6 +60,12 @@ __all__ = [
     "ConversationBase", "ConversationCreate", "ConversationUpdate", 
     "ConversationResponse", "ConversationSummary", "UserConversationsResponse",
     "ChatMessage", "ChatResponse", "ConversationHistory",
+    
+    # Concert
+    "ConcertBase", "ConcertCreate", "ConcertUpdate", "ConcertResponse",
+    "ConcertSummary", "ConcertsResponse", "OngoingConcertsResponse",
+    "ConcertSearch", "ConcertDateRange",
+
     
     # Festival
     "FestivalBase", "FestivalCreate", "FestivalUpdate",

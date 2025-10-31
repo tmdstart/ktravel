@@ -1,45 +1,98 @@
-import React from 'react';
-import { Calendar, MapPin } from 'lucide-react';
+import React, { useState } from 'react';
+import '../styles/ScheduleTable.css'; // CSS 파일도 kschedule용으로 변경
 
-// Mock Schedule Data (위치 정보 포함)
-const mockSchedules = [
-  { id: 1, name: "경복궁 방문", date: "2025-10-30", location: "Gyeongbokgung Palace", lat: 37.5833, lng: 126.9769 },
-  { id: 2, name: "남산타워 저녁", date: "2025-10-30", location: "N Seoul Tower", lat: 37.5512, lng: 126.9880 },
-  { id: 3, name: "부산 해운대", date: "2025-10-31", location: "Haeundae Beach", lat: 35.1587, lng: 129.1601 },
-];
+const ScheduleTable = () => {
+  const [scheduleName, setScheduleName] = useState('새 일정');
 
-/**
- * 사용자 일정 테이블을 표시하고 선택 시 콜백을 실행하는 컴포넌트입니다.
- * @param {object} props
- * @param {function} props.onSelectSchedule - 일정이 선택되었을 때 실행되는 콜백 함수
- * @param {number | null} props.selectedId - 현재 선택된 일정의 ID
- */
-function ScheduleTable({ onSelectSchedule, selectedId }) {
+  const days = ['Location', 'Estimated Cost', 'Place of use', 'Memo', 'Notice'];
+  const times = ['9:00', '10:00', '11:00'];
+
+  const handleButtonClick = (action) => {
+    console.log(`${action} 버튼 클릭됨`);
+  };
+
   return (
-    <div className="kpath-schedule-container">
-      <h2 className="kpath-schedule-title">
-        <Calendar className="w-5 h-5 mr-2" />
-        사용자 여행 일정
-      </h2>
-      <div className="kpath-schedule-list-container">
-        {mockSchedules.map((schedule) => (
-          <div
-            key={schedule.id}
-            className={`kpath-schedule-item ${selectedId === schedule.id ? 'selected' : ''}`}
-            onClick={() => onSelectSchedule(schedule)}
-          >
-            <div className="flex items-center space-x-2">
-              <MapPin className="w-4 h-4 text-blue-500" />
-              <span className="font-semibold">{schedule.name}</span>
-            </div>
-            <div className="text-sm text-gray-500">
-              {schedule.date} | {schedule.location}
-            </div>
-          </div>
-        ))}
+    <div className="kschedule-container">
+      {/* 1. 헤더 */}
+      <header className="kschedule-header">
+        <h1>🗓️ 일정 관리 및 편집기</h1>
+      </header>
+
+      {/* 2. 알림/상태 바 */}
+      <div className="kschedule-status-bar">
+        <span role="img" aria-label="checkmark">✅</span> Firebase 연결 및 인증 완료.
+      </div>
+
+      {/* 3. 일정 이름 입력 및 사용자 ID */}
+      <div className="kschedule-details">
+        <label htmlFor="kschedule-name">일정 이름:</label>
+        <input
+          id="kschedule-name"
+          type="text"
+          value={scheduleName}
+          onChange={(e) => setScheduleName(e.target.value)}
+        />
+      </div>
+
+      {/* 4. 액션 버튼 그룹 */}
+      <div className="kschedule-action-buttons">
+        <button
+          className="kschedule-btn kschedule-btn-primary"
+          onClick={() => handleButtonClick('새 일정')}
+        >
+          📅 새 일정 추가
+        </button>
+        <button
+          className="kschedule-btn kschedule-btn-success"
+          onClick={() => handleButtonClick('행 추가')}
+        >
+          + 행 추가
+        </button>
+        <button
+          className="kschedule-btn kschedule-btn-info"
+          onClick={() => handleButtonClick('열 추가')}
+        >
+          ⬆️ 열 추가
+        </button>
+        <button
+          className="kschedule-btn kschedule-btn-download"
+          onClick={() => handleButtonClick('CSV 다운로드')}
+        >
+          <span role="img" aria-label="download">⬇️</span> CSV 다운로드
+        </button>
+      </div>
+
+      {/* 5. 일정 테이블 */}
+      <div className="kschedule-table-wrapper">
+        <table className="kschedule-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              {days.map((day, index) => (
+                <th key={index}>{day}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {times.map((time, timeIndex) => (
+              <tr key={timeIndex}>
+                <td className="kschedule-time-cell">{time}</td>
+                {days.map((_, dayIndex) => (
+                  <td key={dayIndex} className="kschedule-schedule-cell">
+                    {/* 일정 내용 */}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="kschedule-table-dots">
+        <span>...</span>
       </div>
     </div>
   );
-}
+};
 
 export default ScheduleTable;
