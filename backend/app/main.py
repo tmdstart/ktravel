@@ -11,7 +11,7 @@ from app.core.config import settings
 app = FastAPI(
     title="Travel Planner API",
     description="AI 기반 여행 계획 플래너 API",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # CORS 설정
@@ -27,10 +27,11 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(destinations.router, prefix="/api")
-app.include_router(festival.router)
-app.include_router(map_search.router, prefix="/search") 
-app.include_router(odsay.router)
-app.include_router(concert.router)
+app.include_router(festival.router, prefix="/api")
+app.include_router(map_search.router, prefix="/api")
+app.include_router(odsay.router, prefix="/api")
+app.include_router(concert.router, prefix="/api")
+
 
 # Health Check
 @app.get("/")

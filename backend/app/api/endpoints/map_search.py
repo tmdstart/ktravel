@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-router = APIRouter(
-    tags=["Map Search & Geocoding"],
-)
+router = APIRouter(prefix="/search", tags=["map-search"])
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 

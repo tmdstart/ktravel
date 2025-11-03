@@ -3,7 +3,7 @@
 .sidebar {
     position: fixed;
     top: 0;
-    left: -220px;
+    left: -250px;
     width: 250px;
     height: 100vh;
     /* --- 이 값을 원하는 반투명도로 변경하세요 --- */

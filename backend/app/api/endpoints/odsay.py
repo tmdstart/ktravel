@@ -8,10 +8,7 @@ from typing import List, Dict, Any
 ODSAY_API_KEY = os.getenv("ODSAY_API_KEY") 
 ODSAY_URL = "https://api.odsay.com/v1/api/searchPubTransPathT?lang=1"
 
-router = APIRouter(
-    prefix="/api",
-    tags=["kpath-map"],
-)
+router = APIRouter(prefix="/odsay", tags=["odsay"])
 
 # ----------------------------------------------------
 # Pydantic 모델 정의
@@ -72,7 +69,7 @@ def convert_to_english(sub_path: Dict[str, Any]) -> None:
 # 경로 검색 엔드포인트
 # ----------------------------------------------------
 
-@router.post("/search/route", response_model=RouteResponse)
+@router.post("/route", response_model=RouteResponse)
 async def search_route(request: RouteRequest):
     """
     POST /api/search/route

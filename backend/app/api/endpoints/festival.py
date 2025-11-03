@@ -15,7 +15,7 @@ from app.schemas import (                    # ← backend. 제거
 )
 
 router = APIRouter(
-    prefix="/api/festivals",
+    prefix="/festivals",
     tags=["festivals"]
 )
 

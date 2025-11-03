@@ -14,6 +14,8 @@
     flex-direction: column; /* 모바일 기본 */
     padding: 1rem;
     font-family: 'Inter', 'system-ui', 'sans-serif'; 
+    margin-top: 30px;
+    margin-left: 1.5rem;
 }
 
 @media (min-width: 640px) {
@@ -27,8 +29,7 @@
     .kpath-container-main {
         flex-direction: row;
         align-items: stretch;
-        padding: 0; /* 전체 화면 사용을 위해 외부 패딩 제거 */
-        gap: 1.5rem; /* 좌우 컨테이너 간격 */
+        padding: 0; /* 전체 화면 사용을 위해 외부 패딩 제거 */ 
     }
 }
 
@@ -38,22 +39,18 @@
 
 /* .kpath-schedule-panel: 왼쪽 1/3 영역 컨테이너 */
 .kpath-schedule-panel {
-    background-color: white;
-    padding: 24px;
+    padding: 10px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
-    
-    /* 데스크톱 레이아웃 (lg: 1024px) */
     width: 100%; /* 모바일 기본 */
     flex-shrink: 0;
 }
 
 @media (min-width: 1024px) {
     .kpath-schedule-panel {
-        width: 350px; /* 고정 너비 설정 */
+        width: 50px; /* 고정 너비 설정 */
         min-height: calc(100vh - 3rem); /* 화면 높이 전체를 차지 (Gap 1.5rem 고려) */
         overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
-        margin-left: 1.5rem;
+        margin-left: 0.5rem;
         margin-top: 1.5rem;
         margin-bottom: 1.5rem;
     }
@@ -65,10 +62,10 @@
 
 /* .kpath-map-panel: 오른쪽 2/3 영역 컨테이너 */
 .kpath-map-panel {
+    padding: 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1; /* 남은 공간 모두 차지 */
-    
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -82,9 +79,9 @@
         
         min-height: calc(100vh - 3rem); 
         overflow-y: auto; 
-        margin-left: 1.5rem;
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
+        margin-left: 1.0rem;
+        margin-top: 1.0rem;
+        margin-bottom: 1.0rem;
     }
 }
 
@@ -93,15 +90,15 @@
 /* ==================================== */
 
 .kpath-header-title {
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    color: #1a202c;
+    color: #ffffff;
     margin-bottom: 0.5rem;
 }
 
 .kpath-header-subtitle {
     font-size: 1rem;
-    color: #4a5568;
+    color: #c8cfdb;
     margin-bottom: 1.5rem;
 }
 
@@ -115,7 +112,7 @@
     align-items: center;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid #e2e8f0; /* 구분선 */
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .kpath-search-input {

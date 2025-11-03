@@ -10,8 +10,8 @@ import MemoModal from '../components/kpathidea/MemoModal';
 
 // API 및 환경 변수 설정
 const NAVER_MAPS_CLIENT_ID = process.env.REACT_APP_NAVER_MAPS_CLIENT_ID;
-const LOCATION_API_URL = "http://127.0.0.1:8000/search/location";
-const ROUTE_API_URL = "http://127.0.0.1:8000/api/search/route";
+const LOCATION_API_URL = "http://127.0.0.1:8000/api/search/location";
+const ROUTE_API_URL = "http://127.0.0.1:8000/api/odsay/route";
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 function KPathIdeaPage({ scheduleLocation }) {
@@ -154,44 +154,68 @@ function KPathIdeaPage({ scheduleLocation }) {
     }, [fetchRoute]);
 
     // --- 7. 위치 검색 함수 (마커 추가 로직 - 원본 유지) ---
-    const handleSearch = async (e) => {
-        e?.preventDefault?.();
-        if (!searchQuery.trim() || !map || isLoading) return;
+   const handleSearch = async (e) => {
+    e?.preventDefault?.();
+    
+    // 💡 수정 1: DOM에서 직접 입력 필드의 값을 읽어옵니다. 
+    // searchQuery 상태가 Google Autocomplete에 의해 업데이트되지 않을 가능성을 처리합니다.
+    const inputElement = document.getElementById('autocomplete-input');
+    const currentQuery = inputElement ? inputElement.value.trim() : searchQuery.trim();
 
-        setIsLoading(true);
-        setMessage(`'${searchQuery}' 위치 검색 중...`);
-        clearRoute();
+    // 🚨 디버깅 로그: 요청 전에 실제로 사용할 쿼리 값을 확인합니다.
+    console.log("🔥 최종 전송 쿼리:", currentQuery);
 
-        try {
-            const response = await fetch(`${LOCATION_API_URL}?query=${encodeURIComponent(searchQuery)}`, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
-            if (!response.ok) { throw new Error(`HTTP 오류! 상태 코드: ${response.status}`); }
-            const data = await response.json();
+    if (!currentQuery || !map || isLoading) return;
 
-            const lat = data.latitude ?? data.y;
-            const lng = data.longitude ?? data.x;
-            if (typeof lat === 'number' && typeof lng === 'number') {
-                const newId = Date.now();
-                const newMarker = { id: newId, lat, lng, name: data.query || searchQuery };
+    // 💡 검색 필드 값을 현재 검색어로 업데이트 (사용자가 일반 검색 버튼을 눌렀을 때를 위해)
+    setSearchQuery(currentQuery); 
+    
+    setIsLoading(true);
+    setMessage(`'${currentQuery}' 위치 검색 중...`);
+    clearRoute();
 
-                setUserMarkers(prev => [...prev, newMarker]);
-                setMessage(`'${newMarker.name}' 마커가 추가되었습니다.`);
-                try {
-                    if (map) {
-                        map.setCenter(new window.naver.maps.LatLng(newMarker.lat, newMarker.lng));
-                        map.setZoom(14, true);
-                    }
-                } catch (e) { console.warn('지도 중심 실패', e); }
-            } else {
-                setMessage(`'${searchQuery}'에 대한 유효한 좌표를 찾지 못했습니다.`);
-            }
-        } catch (error) {
-            console.error('검색 중 오류 발생:', error);
-            setMessage(`통신 오류: ${error.message}.`);
-        } finally {
-            setIsLoading(false);
+    try {
+        const encodedQuery = encodeURIComponent(currentQuery); // currentQuery 사용
+        const requestUrl = `${LOCATION_API_URL}?query=${encodedQuery}`;
+        console.log("📍 LOCATION API 요청 URL:", requestUrl);
+
+        // 🚨 수정 2: GET 요청이므로, 불필요한 Content-Type 헤더를 완전히 제거합니다.
+        const response = await fetch(requestUrl, { 
+            method: 'GET', 
+            // headers: { 'Content-Type': 'application/json' } <-- 제거됨
+        });
+        
+        if (!response.ok) { 
+            throw new Error(`HTTP 오류! 상태 코드: ${response.status}`); 
         }
-    };
+        const data = await response.json();
 
+        const lat = data.latitude ?? data.y;
+        const lng = data.longitude ?? data.x;
+        
+        if (typeof lat === 'number' && typeof lng === 'number') {
+            const newId = Date.now();
+            // data.query가 있으면 사용하고, 없으면 currentQuery를 사용합니다.
+            const newMarker = { id: newId, lat, lng, name: data.query || currentQuery }; 
+
+            setUserMarkers(prev => [...prev, newMarker]);
+            setMessage(`'${newMarker.name}' 마커가 추가되었습니다.`);
+            try {
+                if (map) {
+                    map.setCenter(new window.naver.maps.LatLng(newMarker.lat, newMarker.lng));
+                    map.setZoom(14, true);
+                }
+            } catch (e) { console.warn('지도 중심 실패', e); }
+        } else {
+            setMessage(`'${currentQuery}'에 대한 유효한 좌표를 찾지 못했습니다.`);
+        }
+    } catch (error) {
+        console.error('검색 중 오류 발생:', error);
+        setMessage(`통신 오류: ${error.message}.`);
+    } finally {
+        setIsLoading(false);
+    }
+};
     // --- 8. 자동완성 로직 (원본 유지) ---
     useEffect(() => {
         const initAutocomplete = () => {

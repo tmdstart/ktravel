@@ -15,17 +15,12 @@ const ScheduleTable = () => {
     <div className="kschedule-container">
       {/* 1. 헤더 */}
       <header className="kschedule-header">
-        <h1>🗓️ 일정 관리 및 편집기</h1>
+        <h1>🗓️ Schedule Management and Editor </h1>
       </header>
-
-      {/* 2. 알림/상태 바 */}
-      <div className="kschedule-status-bar">
-        <span role="img" aria-label="checkmark">✅</span> Firebase 연결 및 인증 완료.
-      </div>
 
       {/* 3. 일정 이름 입력 및 사용자 ID */}
       <div className="kschedule-details">
-        <label htmlFor="kschedule-name">일정 이름:</label>
+        <label htmlFor="kschedule-name">Schedule Name</label>
         <input
           id="kschedule-name"
           type="text"
@@ -40,25 +35,25 @@ const ScheduleTable = () => {
           className="kschedule-btn kschedule-btn-primary"
           onClick={() => handleButtonClick('새 일정')}
         >
-          📅 새 일정 추가
+          📅 Add New Schedule
         </button>
         <button
           className="kschedule-btn kschedule-btn-success"
           onClick={() => handleButtonClick('행 추가')}
         >
-          + 행 추가
+          + Add Row
         </button>
         <button
           className="kschedule-btn kschedule-btn-info"
           onClick={() => handleButtonClick('열 추가')}
         >
-          ⬆️ 열 추가
+          ⬆ Add Columns
         </button>
         <button
           className="kschedule-btn kschedule-btn-download"
           onClick={() => handleButtonClick('CSV 다운로드')}
         >
-          <span role="img" aria-label="download">⬇️</span> CSV 다운로드
+          <span role="img" aria-label="download">⬇</span> CSV Download
         </button>
       </div>
 

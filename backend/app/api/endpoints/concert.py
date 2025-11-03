@@ -16,7 +16,7 @@ from app.schemas import (
 )
 
 router = APIRouter(
-    prefix="/api/concerts", # URL 접두사를 /api/concerts로 변경
+    prefix="/concerts", # URL 접두사를 /api/concerts로 변경
     tags=["concerts"] # 태그를 concerts로 변경
 )
 

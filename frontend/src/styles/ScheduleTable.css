@@ -2,11 +2,11 @@
 
 /* 전체 컨테이너 스타일 */
 .kschedule-container {
-    max-width: 900px;
-    margin: 20px auto;
+    max-width: 1000px;
+    margin: 30px auto;
     padding: 20px;
-    background-color: #ffffff;
     border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
@@ -15,25 +15,11 @@
 .kschedule-header h1 {
     font-size: 24px;
     font-weight: 600;
-    color: #333;
+    color: #fdf5f5;
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
-}
-
-/* 2. 상태 바 (Firebase 연결 완료 부분) */
-.kschedule-status-bar {
-    background-color: #fffbe6;
-    border: 1px solid #ffe58f;
-    color: #594400;
-    padding: 10px 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }
 
 /* 3. 일정 이름 입력 및 사용자 ID */
@@ -110,6 +96,9 @@
 /* 5. 일정 테이블 */
 .kschedule-table-wrapper {
     overflow-x: auto;
+    border-radius: 12px; 
+    /* ✨ 중요: 테이블 내용이 둥근 모서리를 벗어나지 않도록 숨깁니다. */
+    overflow: hidden;
 }
 
 .kschedule-table {
@@ -120,7 +109,7 @@
 }
 
 .kschedule-table th, .kschedule-table td {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #2e1515;
     padding: 0;
     height: 40px;
     text-align: center;
