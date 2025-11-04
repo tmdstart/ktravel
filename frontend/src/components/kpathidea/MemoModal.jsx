@@ -1,5 +1,5 @@
 // src/components/kpathidea/MemoModal.jsx (새 파일 또는 KPathIdeaPage.jsx에 정의)
-
+import './MemoModal.css'
 import React, { useState } from 'react';
 
 const MemoModal = ({ markerId, initialTitle, initialMemo, onSave, onClose }) => {
@@ -13,15 +13,15 @@ const MemoModal = ({ markerId, initialTitle, initialMemo, onSave, onClose }) => 
     return (
         <div className="modal-overlay">
             <div className="kpath-memo-modal">
-                <h3 className="kpath-modal-title">마커 정보 입력/수정</h3>
-                <label>타이틀 (마커 아래 표시)</label>
+                <h3 className="kpath-modal-title">Enter/modify marker information</h3>
+                <label>Title</label>
                 <input 
                     type="text" 
                     value={title} 
                     onChange={(e) => setTitle(e.target.value)} 
                     placeholder="장소 이름을 입력하세요."
                 />
-                <label>추가 메모 (인포윈도우)</label>
+                <label>Additional Notes 📄</label>
                 <textarea
                     value={memo}
                     onChange={(e) => setMemo(e.target.value)}
@@ -29,8 +29,8 @@ const MemoModal = ({ markerId, initialTitle, initialMemo, onSave, onClose }) => 
                     rows="4"
                 />
                 <div className="modal-actions">
-                    <button onClick={onClose} className="btn-cancel">취소</button>
-                    <button onClick={handleSave} className="btn-save">저장</button>
+                    <button onClick={onClose} className="btn-cancel">Cancel</button>
+                    <button onClick={handleSave} className="btn-save">Save</button>
                 </div>
             </div>
         </div>

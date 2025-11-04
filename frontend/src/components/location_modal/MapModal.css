@@ -1,0 +1,102 @@
+/* 모달 전체 오버레이 (배경) */
+.map-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 뒤의 페이지가 비치도록 반투명한 어두운 배경 */
+    background: rgba(0, 0, 0, 0.75); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 최상단에 표시 */
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 모달 컨텐츠 박스 */
+.map-modal-content {
+    background: #ffffff; /* 모달 배경은 흰색 (글래스모피즘 컨테이너와 대비) */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 95%;
+    max-width: 650px; /* 적절한 최대 너비 설정 */
+    animation: slideUp 0.3s ease-out;
+}
+
+/* 모달 닫기 버튼 */
+.map-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #333;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.map-modal-close:hover {
+    color: #a32cb1; /* 메인 테마색으로 변경 */
+}
+
+/* 모달 내부 텍스트 스타일 */
+.map-modal-content h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 5px;
+}
+.modal-place-name {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* 지도 표시 영역 컨테이너 */
+.map-container {
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 350px; /* 지도 표시 영역 높이 고정 */
+    border: 1px solid #ddd;
+}
+
+/* 장소 추가 버튼 */
+.modal-add-schedule-button {
+    width: 100%;
+    padding: 12px;
+    background: #c92785; 
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+.modal-add-schedule-button:hover {
+    background: #5d32ac;
+    transform: translateY(-1px);
+}
+
+
+
+/* 애니메이션 Keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

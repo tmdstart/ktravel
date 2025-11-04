@@ -197,7 +197,7 @@ html, body {
 
 
 .card-description p {
-    font-size: 32px;
+    font-size: 25px;
     font-weight: 500;
     color: #ffffff;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.8); 
@@ -246,14 +246,12 @@ html, body {
 
 /* 큰 카드에 맞춰 제목 크기 조정 */
 .concept-cards-grid .concept-card-link:nth-child(1) .card-title {
-    font-size: 40px; 
+    font-size: 50px; 
 }
 .concept-cards-grid .concept-card-link:nth-child(1) .card-subtitle {
-    font-size: 20px;
+    font-size: 25px;
 }
-.concept-cards-grid .concept-card-link:nth-child(1) .card-icon {
-    font-size: 30px;
-}
+
 .card-title {
     font-size: 30px;
     font-weight: 900;
@@ -263,7 +261,7 @@ html, body {
     line-height: 1.2;
 }
 .card-subtitle {
-    font-size: 18px;
+    font-size: 20px;
     color: rgba(240, 222, 222, 0.85);
     position: relative;
     z-index: 3;
@@ -275,10 +273,6 @@ html, body {
     align-items: center;
     gap: 10px;
     z-index: 3;
-}
-.card-icon {
-    font-size: 20px;
-    color: #fff;
 }
 
 /* 카드 배경 및 오버레이 (원본 유지) */
@@ -340,13 +334,13 @@ html, body {
 }
 
 .login-title {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .login-subtitle {
-    font-size: 15px;
+    font-size: 17px;
     color: #b0b0c0;
     margin-bottom: 30px;
 }
@@ -612,3 +606,29 @@ html, body {
 .fade-in-delay-3 { animation-delay: 0.6s; }
 .fade-in-delay-4 { animation-delay: 0.8s; }
 .fade-in-delay-5 { animation-delay: 1s; }
+
+/* 1. 'K' 글자에 빛 효과 적용 */
+.glow-k {
+  
+    
+    /* text-shadow 속성으로 네온 효과 생성 */
+    text-shadow:
+        /* 첫 번째 그림자: 강한 빛 */
+        0 0 5px #df0e20, 
+        /* 두 번째 그림자: 넓게 퍼지는 빛 */
+        0 0 10px #e20e0e,
+        /* 세 번째 그림자: 더 넓게 퍼지는 가장자리 빛 */
+        0 0 20px #ce0c0c;
+}
+
+/* 2. 'AI' 글자에 빛 효과 적용 */
+.glow-ai {
+    /* text-shadow 속성으로 네온 효과 생성 */
+    text-shadow:
+        /* 첫 번째 그림자: 강한 빛 */
+        0 0 5px #090df1, 
+        /* 두 번째 그림자: 넓게 퍼지는 빛 */
+        0 0 15px #0919f0,
+        /* 세 번째 그림자: 더 넓게 퍼지는 가장자리 빛 */
+        0 0 30px #0616f0;
+}

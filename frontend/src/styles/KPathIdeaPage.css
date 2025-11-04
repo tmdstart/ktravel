@@ -305,12 +305,6 @@
     color: #3730a3; /* hover:Indigo-800 */
 }
 
-/* kpath-custom-marker.css (또는 기존 KPathIdeaPage.css에 추가) */
-
-/*
-* 마우스 오버 시 메모 표시를 위한 기본 스타일
-*/
-
 /* 마커와 라벨, 메모를 담는 전체 래퍼 */
 .kpath-custom-marker-wrapper {
     /* HTML 인라인 스타일로 대부분 처리되었으나, 호버 효과를 위해 */
@@ -332,17 +326,11 @@
     pointer-events: none; /* 클릭 이벤트가 마커를 통과하도록 설정 */
 }
 
-/* 마커 래퍼에 마우스를 올렸을 때 메모를 표시 */
-/* HTML 문자열 내 style 태그 대신 외부에서 정의하면 더 깔끔함 */
 .kpath-custom-marker-wrapper:hover .kpath-marker-memo {
-    /* 인라인 style 태그의 display: block;을 덮어쓰거나, 
-       인라인 style 태그를 제거하고 이 외부 CSS를 사용하는 것을 권장 */
     display: block !important; /* 인라인 스타일을 강제 덮어쓰기 위해 */
     opacity: 1;
 }
 
-/* src/styles/kpath-custom-marker.css */
-/* src/styles/kpath-custom-marker.css */
 
 /* --- 1. 전체 래퍼 및 기본 설정 --- */
 .kpath-custom-marker-wrapper {
@@ -415,90 +403,5 @@
 
 /* 마커 이름의 테두리 색상을 흰색으로 고정하려면 아래를 추가 (선택 사항) */
 .kpath-marker-label {
-    border-color: #FFFFFF !important;
-}
-
-/* --- 모달 오버레이: 화면 전체를 덮고 중앙에 배치 --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은 배경 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* 지도 위 표시 */
-}
-
-/* --- 모달 내용 상자 --- */
-.kpath-memo-modal {
-    background-color: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    width: 90%;
-    max-width: 450px;
-    box-sizing: border-box;
-}
-
-/* --- 모달 제목 --- */
-.kpath-modal-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-/* --- 라벨 --- */
-.kpath-memo-modal label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #444;
-}
-
-/* --- 입력창과 텍스트 영역 --- */
-.kpath-memo-modal input,
-.kpath-memo-modal textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-sizing: border-box;
-    resize: vertical; /* textarea만 세로 크기 조절 가능 */
-}
-
-/* --- 버튼 영역 --- */
-.modal-actions {
-    margin-top: 25px;
-    text-align: right;
-}
-
-/* --- 버튼 공통 스타일 --- */
-.btn-cancel,
-.btn-save {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-/* --- 취소 버튼 --- */
-.btn-cancel {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-/* --- 저장 버튼 --- */
-.btn-save {
-    background-color: #007bff;
-    color: #fff;
+    border-color: #2d47df
 }

@@ -7,6 +7,14 @@
 /* 0. 통합 페이지 레이아웃 (kpath-container-main) */
 /* ==================================== */
 
+.kpath-page-body {
+     background: linear-gradient(135deg, #036d38 0%, #669bd8 100%); 
+}
+
+.kpath-header-container {
+    background-color: #282c34; /* 헤더 배경만 어둡게 */
+}
+
 /* min-h-screen bg-gray-50 flex flex-col p-4 sm:p-8 font-sans */
 .kpath-container-main {
     min-height: 100vh;
@@ -89,17 +97,38 @@
 /* 3. 공통 헤더 및 제목 스타일 */
 /* ==================================== */
 
+@keyframes fadeInUpKPath {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95); /* 살짝 작게 시작 */
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateY(10px) scale(1.02); /* 살짝 확대 + 이동 */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1); /* 원래 위치와 크기 */
+    }
+}
+
+/* .kpath-header-title 모션 적용 */
 .kpath-header-title {
     font-size: 3rem;
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 0.5rem;
+    /* 모션 적용 */
+    opacity: 0; /* 초기 상태 안보이게 */
+    animation: fadeInUpKPath 1s ease-out forwards; /* 1초 동안 애니메이션 */
 }
 
 .kpath-header-subtitle {
-    font-size: 1rem;
+    font-size: 1.5rem;
     color: #c8cfdb;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem; /* 모션 적용 */
+    opacity: 0; /* 초기 상태 안보이게 */
+    animation: fadeInUpKPath 1s ease-out forwards; /* 1초 동안 애니메이션 */
 }
 
 /* ==================================== */
@@ -299,10 +328,6 @@
 }
 
 
-/* ==================================== */
-/* 8. 아이콘 스타일 (lucide-react) */
-/* ==================================== */
-
 /* w-5 h-5 mr-2 */
 .kpath-icon-base {
     width: 1.25rem; /* w-5 */
@@ -323,81 +348,4 @@
         transform: rotate(360deg);
     }
 }
-/* KPathIdeaPage.css (또는 관련 스타일 파일) */
 
-/* --- 모달 오버레이: 배경을 어둡게 하고 중앙에 배치 --- */
-.kpath-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* 지도나 다른 UI보다 위에 표시 */
-}
-
-/* --- 모달 내용 상자 --- */
-.kpath-memo-modal-content {
-    background: white;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    width: 90%;
-    max-width: 450px; /* 적절한 크기 제한 */
-}
-
-.kpath-modal-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-.kpath-memo-modal-content label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #444;
-}
-
-.kpath-modal-input,
-.kpath-modal-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 1rem;
-    resize: vertical; /* textarea만 세로 크기 조절 허용 */
-}
-
-/* --- 버튼 액션 영역 --- */
-.kpath-modal-actions {
-    margin-top: 25px;
-    text-align: right;
-}
-
-.kpath-modal-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    margin-left: 10px;
-}
-
-.kpath-btn-cancel {
-    background: #e0e0e0;
-    color: #333;
-}
-
-.kpath-btn-save {
-    background: #007bff; /* 파란색 (스크린샷 참고) */
-    color: white;
-}
