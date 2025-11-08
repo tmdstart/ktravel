@@ -146,8 +146,41 @@ const NaverMap = () => {
                 // 🎯 정보창 내용 - 타입별로 다르게 표시
                 const itemId = markerData.type === 'attraction' ? markerData.attr_id : markerData.festival_id;
                 
+                // 🎯 이미지 URL 가져오기
+                let imageUrl = null;
+                if (markerData.type === 'festival' && markerData.image_url) {
+                    imageUrl = markerData.image_url;
+                } else if (markerData.type === 'attraction' && markerData.image_urls) {
+                    // image_urls가 배열이면 첫 번째, 문자열이면 그대로 사용
+                    imageUrl = Array.isArray(markerData.image_urls) 
+                        ? markerData.image_urls[0] 
+                        : markerData.image_urls;
+                }
+                
                 let infoContent = `
                     <div style="padding: 15px; max-width: 280px; font-family: Arial, sans-serif;">
+                `;
+                
+                // 🎯 이미지 표시
+                if (imageUrl) {
+                    infoContent += `
+                        <div style="margin-bottom: 10px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <img 
+                                src="${imageUrl}" 
+                                alt="${markerData.title}"
+                                style="
+                                    width: 100%;
+                                    height: 150px;
+                                    object-fit: cover;
+                                    display: block;
+                                "
+                                onerror="this.style.display='none'"
+                            />
+                        </div>
+                    `;
+                }
+                
+                infoContent += `
                         <h4 style="margin: 0 0 8px 0; color: #333; font-size: 16px; font-weight: bold;">
                             ${markerData.type === 'attraction' ? '📍' : '🎭'} ${markerData.title}
                         </h4>

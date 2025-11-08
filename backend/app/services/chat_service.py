@@ -3,13 +3,19 @@ from typing import Dict, Any, List
 from sqlalchemy.orm import Session
 import json
 import os
-import random  # 🎯 NEW: 랜덤 기능 추가
+import random
+import re
 from langchain_openai import OpenAIEmbeddings
 from qdrant_client import QdrantClient
 
 from app.models.conversation import Conversation  
 from app.models.festival import Festival
 from app.utils.openai_client import chat_with_gpt
+from app.utils.prompts import (
+    KEYWORD_EXTRACTION_PROMPT,
+    FESTIVAL_RESPONSE_PROMPT,
+    ATTRACTION_RESPONSE_PROMPT
+)
 
 class ChatService:
     
@@ -18,27 +24,46 @@ class ChatService:
     COLLECTION_NAME = "seoul-festival"
     ATTRACTION_COLLECTION = "seoul-attraction"
     
+    # 🚀 임베딩 모델 캐싱 (재사용)
+    _embedding_model = None
+    
+    @staticmethod
+    def _get_embedding_model():
+        """임베딩 모델 싱글톤 패턴으로 재사용"""
+        if ChatService._embedding_model is None:
+            ChatService._embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
+        return ChatService._embedding_model
+    
     @staticmethod
     def send_message(db: Session, user_id: int, message: str) -> Dict[str, Any]:
         """
         메시지 처리 및 응답 생성 - 축제 + 관광명소 통합 검색 + 랜덤 추천
+        🚀 속도 최적화: 단순 쿼리는 짧은 프롬프트 + description 활용
         """
+        import time  # 🔍 시간 측정용
+        
         try:
-            # 1. 키워드 추출 및 랜덤 추천 여부 확인
-            analysis = ChatService._analyze_message_simple(message)
+            total_start = time.time()
+            
+            # 🚀 1. 빠른 키워드 추출 (GPT 최소화)
+            step_start = time.time()
+            analysis = ChatService._analyze_message_fast(message)
+            print(f"⏱️ 1. 키워드 추출: {time.time() - step_start:.3f}초")
+            
             keyword = analysis.get('keyword', message)
-            is_random = analysis.get('is_random_recommendation', False)  # 🎯 NEW
+            is_random = analysis.get('is_random_recommendation', False)
+            is_simple_query = analysis.get('is_simple_query', False)  # 🚀 NEW
             
             results = []
             
-            # 🎯 NEW: 2-1. 랜덤 추천 요청인 경우
+            # 🎯 2-1. 랜덤 추천 요청인 경우
             if is_random:
+                step_start = time.time()
                 random_attractions = ChatService._get_random_attractions(count=10)
+                print(f"⏱️ 2. 랜덤 추천: {time.time() - step_start:.3f}초")
                 
-                # GPT 응답 생성 (타이틀 리스트만)
                 ai_response = ChatService._generate_random_response(random_attractions)
                 
-                # 대화 저장
                 conversation = Conversation(
                     user_id=user_id,
                     question=message,
@@ -47,6 +72,8 @@ class ChatService:
                 db.add(conversation)
                 db.commit()
                 db.refresh(conversation)
+                
+                print(f"⏱️ 총 소요 시간: {time.time() - total_start:.3f}초\n")
                 
                 return {
                     "response": ai_response,
@@ -57,16 +84,20 @@ class ChatService:
                     "attractions": random_attractions,
                     "has_festivals": False,
                     "has_attractions": len(random_attractions) > 0,
-                    "map_markers": []  # 랜덤 추천은 지도 마커 없음
+                    "map_markers": []
                 }
             
-            # 2-2. 기존: 축제 + 관광명소 검색
+            # 🚀 2-2. 축제 + 관광명소 검색
+            step_start = time.time()
             festival = ChatService._search_best_festival(keyword)
+            print(f"⏱️ 2. 축제 검색: {time.time() - step_start:.3f}초")
             if festival:
                 festival['type'] = 'festival'
                 results.append(festival)
             
+            step_start = time.time()
             attraction = ChatService._search_best_attraction(keyword)
+            print(f"⏱️ 3. 관광지 검색: {time.time() - step_start:.3f}초")
             if attraction:
                 attraction['type'] = 'attraction'
                 results.append(attraction)
@@ -78,10 +109,21 @@ class ChatService:
             else:
                 best_result = []
             
-            # 4. GPT 최종 응답 생성
-            ai_response = ChatService._generate_final_response(message, best_result)
+            # 🚀 4. 응답 생성 (description 활용 + 간단한 프롬프트)
+            step_start = time.time()
+            if is_simple_query and best_result:
+                # 단순 쿼리: description 그대로 반환 (GPT 없음)
+                ai_response = ChatService._get_description_only(best_result[0])
+                print(f"✅ NEW VERSION: GPT 완전 제거 - description만 반환")
+                print(f"⏱️ 4. 응답 생성 (단순): {time.time() - step_start:.3f}초")
+            else:
+                # 복잡한 쿼리: GPT 사용
+                ai_response = ChatService._generate_final_response(message, best_result)
+                print(f"🤖 복잡한 쿼리 - GPT 사용")
+                print(f"⏱️ 4. 응답 생성 (복잡): {time.time() - step_start:.3f}초")
             
             # 5. 대화 저장
+            step_start = time.time()
             conversation = Conversation(
                 user_id=user_id,
                 question=message,
@@ -90,6 +132,9 @@ class ChatService:
             db.add(conversation)
             db.commit()
             db.refresh(conversation)
+            print(f"⏱️ 5. DB 저장: {time.time() - step_start:.3f}초")
+            
+            print(f"⏱️ 총 소요 시간: {time.time() - total_start:.3f}초\n")
             
             # 6. 응답 구성
             return {
@@ -108,38 +153,44 @@ class ChatService:
             raise Exception(f"채팅 처리 중 오류 발생: {str(e)}")
     
     @staticmethod
-    def _analyze_message_simple(message: str) -> Dict[str, Any]:
+    def _analyze_message_fast(message: str) -> Dict[str, Any]:
         """
-        🎯 수정: 키워드 직접 감지 (GPT 의존도 낮춤)
+        🚀 최적화: 빠른 키워드 분석 (GPT 호출 최소화)
         """
         try:
-            # 🎯 1단계: 간단한 키워드 감지 (GPT 없이)
             message_lower = message.lower()
             
-            # 랜덤 추천 키워드
-            random_keywords = ['가볼만한', '추천', '어디 갈', '관광지', '명소', '갈만한', '여행지']
-            
-            # 랜덤 추천 감지
+            # 🎯 1단계: 랜덤 추천 감지 (GPT 없이)
+            random_keywords = ['가볼만한', '추천', '어디 갈', '관광지', '명소', '갈만한', '여행지', 'recommend']
             if any(keyword in message_lower for keyword in random_keywords):
                 print(f"🎲 랜덤 추천 감지: '{message}'")
-                return {"is_random_recommendation": True, "keyword": ""}
+                return {"is_random_recommendation": True, "keyword": "", "is_simple_query": False}
             
-            # 🎯 2단계: GPT로 키워드 추출 (일반 검색)
-            print(f"🔍 일반 검색 모드: '{message}'")
+            # 🚀 2단계: 단순 쿼리 감지 (GPT 없이 처리)
+            simple_patterns = [
+                r'(introduce|introduco|소개|알려|정보|설명|tell me about)',  # 🎯 오타 허용
+                r'(what is|뭐야|무엇|어디)',
+            ]
+            
+            is_simple = any(re.search(pattern, message_lower) for pattern in simple_patterns)
+            
+            if is_simple:
+                # 단순 쿼리는 GPT 없이 키워드만 추출
+                keyword = ChatService._extract_keyword_simple(message)
+                print(f"🚀 단순 쿼리 감지 (GPT 생략): '{keyword}'")
+                return {
+                    "is_random_recommendation": False,
+                    "keyword": keyword,
+                    "is_simple_query": True  # 🚀 description 직접 반환
+                }
+            
+            # 🎯 3단계: 복잡한 쿼리만 GPT 사용
+            print(f"🤖 복잡한 쿼리 - GPT 사용: '{message}'")
             
             analysis_messages = [
                 {
                     "role": "system",
-                    "content": """사용자 메시지에서 검색 키워드를 추출하세요.
-
-응답 형식 (JSON):
-{
-    "keyword": "검색할 키워드"
-}
-
-예시:
-- "Dosan park 알려줘" → {"keyword": "Dosan park"}
-- "한강페스티벌 정보" → {"keyword": "한강페스티벌"}"""
+                    "content": KEYWORD_EXTRACTION_PROMPT
                 },
                 {
                     "role": "user",
@@ -152,22 +203,69 @@ class ChatService:
             try:
                 result = json.loads(gpt_response)
                 result['is_random_recommendation'] = False
+                result['is_simple_query'] = False
                 print(f"🤖 키워드 추출 성공: {result}")
                 return result
             except json.JSONDecodeError:
                 print(f"⚠️ JSON 파싱 실패, 원본 사용")
-                return {"is_random_recommendation": False, "keyword": message}
+                return {
+                    "is_random_recommendation": False,
+                    "keyword": message,
+                    "is_simple_query": True
+                }
                 
         except Exception as e:
             print(f"❌ 키워드 추출 오류: {e}")
             import traceback
             traceback.print_exc()
-            return {"is_random_recommendation": False, "keyword": message}
+            return {
+                "is_random_recommendation": False,
+                "keyword": message,
+                "is_simple_query": True
+            }
+    
+    @staticmethod
+    def _extract_keyword_simple(message: str) -> str:
+        """
+        🚀 단순 키워드 추출 (GPT 없이)
+        """
+        remove_words = [
+            'introduce', 'tell me about', 'what is', 'where is',
+            '소개', '알려줘', '알려', '정보', '설명', '어디', '뭐야', '무엇',
+            'about', 'the', 'a', 'an', 'me'
+        ]
+        
+        keyword = message.lower()
+        for word in remove_words:
+            keyword = keyword.replace(word, '')
+        
+        keyword = ' '.join(keyword.split())
+        
+        if len(keyword.strip()) < 2:
+            keyword = message
+        
+        return keyword.strip()
+    
+    @staticmethod
+    def _get_description_only(result: Dict[str, Any]) -> str:
+        """
+        🚀 GPT 완전 제거 - description만 반환 (RDB 방식)
+        - 10초 → 0초!
+        """
+        description = result.get('description', '')
+        title = result.get('title', '')
+        
+        if not description or description.strip() == '':
+            return f"🎯 {title}에 대한 정보를 찾았습니다! 아래 카드에서 자세한 내용을 확인해주세요 😊"
+        
+        # 🚀 GPT 없이 description 그대로 반환 (RDB 방식)
+        # 사용자가 원하는 긴 설명은 이미 description에 다 있음
+        return description
     
     @staticmethod
     def _get_random_attractions(count: int = 10) -> List[Dict[str, Any]]:
         """
-        🎯 NEW: 랜덤 관광명소 추천 (타이틀만)
+        🎯 랜덤 관광명소 추천
         """
         try:
             print(f"🎲 랜덤 관광명소 {count}개 추천 시작...")
@@ -178,18 +276,17 @@ class ChatService:
                 prefer_grpc=False
             )
             
-            # 🎯 랜덤 오프셋으로 많이 가져오기 (전체 개수 모르므로)
-            random_offset = random.randint(0, 100)  # 간단하게 0~100 사이
+            random_offset = random.randint(0, 100)
             
             scroll_result = qdrant_client.scroll(
                 collection_name=ChatService.ATTRACTION_COLLECTION,
-                limit=count * 3,  # 여유있게 가져오기
+                limit=count * 3,
                 offset=random_offset,
                 with_payload=True,
                 with_vectors=False
             )
             
-            points = scroll_result[0]  # (points, next_offset) 튜플
+            points = scroll_result[0]
             
             if not points:
                 print(f"❌ 관광명소를 가져올 수 없습니다")
@@ -197,7 +294,6 @@ class ChatService:
             
             print(f"📊 가져온 관광명소: {len(points)}개")
             
-            # 🎯 랜덤 섞기 후 count개만 선택
             random.shuffle(points)
             selected_points = points[:count]
             
@@ -226,7 +322,7 @@ class ChatService:
     @staticmethod
     def _generate_random_response(attractions: List[Dict]) -> str:
         """
-        🎯 NEW: 랜덤 추천 응답 생성 (카드로 보여줄 것이므로 간단히)
+        🎯 랜덤 추천 응답 생성
         """
         if not attractions:
             return "죄송합니다. 추천할 관광지를 찾을 수 없습니다. 😢"
@@ -245,7 +341,8 @@ class ChatService:
                 prefer_grpc=False
             )
             
-            embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
+            # 🚀 임베딩 모델 재사용
+            embedding_model = ChatService._get_embedding_model()
             query_embedding = embedding_model.embed_query(keyword)
             
             search_results = qdrant_client.search(
@@ -297,7 +394,8 @@ class ChatService:
                 prefer_grpc=False
             )
             
-            embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
+            # 🚀 임베딩 모델 재사용
+            embedding_model = ChatService._get_embedding_model()
             query_embedding = embedding_model.embed_query(keyword)
             
             search_results = qdrant_client.search(
@@ -383,43 +481,38 @@ class ChatService:
     @staticmethod
     def _generate_final_response(message: str, results_data: List[Dict]) -> str:
         """
-        GPT를 통한 최종 응답 생성 (축제 + 관광명소)
+        GPT를 통한 최종 응답 생성 (복잡한 쿼리에만 사용)
+        🚀 전체 description 사용
         """
         try:
             if results_data:
                 result = results_data[0]
                 result_type = result.get('type', 'festival')
                 
+                # 🚀 전체 description 사용 (잘라내지 않음)
+                description = result.get('description', '')
+                
                 if result_type == 'festival':
-                    content = f"""
-사용자 질문: {message}
-
-축제 정보:
-- 제목: {result.get('title')}
-- 기간: {result.get('start_date')} ~ {result.get('end_date')}
-- 설명: {result.get('description')}
-
-친절하게 최대한 모든 내용을 활용해서 답변하세요."""
+                    prompt = FESTIVAL_RESPONSE_PROMPT.format(
+                        message=message,
+                        title=result.get('title'),
+                        start_date=result.get('start_date'),
+                        end_date=result.get('end_date'),
+                        description=description
+                    )
                 else:
-                    content = f"""
-사용자 질문: {message}
-
-관광명소 정보:
-- 이름: {result.get('title')}
-- 주소: {result.get('address')}
-- 운영시간: {result.get('hours_of_operation')}
-- 설명: {result.get('description')}
-
-친절하게 최대한 모든 내용을 활용해서 답변하세요."""
+                    prompt = ATTRACTION_RESPONSE_PROMPT.format(
+                        message=message,
+                        title=result.get('title'),
+                        address=result.get('address'),
+                        hours_of_operation=result.get('hours_of_operation'),
+                        description=description
+                    )
                 
                 response_messages = [
                     {
-                        "role": "system", 
-                        "content": "당신은 친절한 관광 가이드입니다. 친절하게 최대한 모든 내용을 활용해서 답변하세요."
-                    },
-                    {
                         "role": "user",
-                        "content": content
+                        "content": prompt
                     }
                 ]
                 

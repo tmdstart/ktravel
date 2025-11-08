@@ -45,3 +45,36 @@ GENERAL_CHAT_PROMPT = """당신은 친절한 여행 플래너 AI 어시스턴트
 - 여행 계획 작성을 도와주세요
 - 여행 관련 질문에 성실히 답변하세요
 """
+
+# 🎯 키워드 추출 프롬프트 (복잡한 쿼리용)
+KEYWORD_EXTRACTION_PROMPT = """사용자 메시지에서 검색 키워드를 추출하세요.
+
+응답 형식 (JSON):
+{
+    "keyword": "검색할 키워드"
+}
+
+예시:
+- "Dosan park 알려줘" → {"keyword": "Dosan park"}
+- "한강페스티벌 정보" → {"keyword": "한강페스티벌"}
+- "경복궁과 창덕궁 비교해줘" → {"keyword": "경복궁 창덕궁"}
+"""
+
+# 🎯 축제 응답 생성 프롬프트
+FESTIVAL_RESPONSE_PROMPT = """User question: {message}
+
+Festival: {title}
+Period: {start_date} ~ {end_date}
+Description: {description}
+
+Answer the question based on this information."""
+
+# 🎯 관광명소 응답 생성 프롬프트
+ATTRACTION_RESPONSE_PROMPT = """User question: {message}
+
+Attraction: {title}
+Address: {address}
+Hours: {hours_of_operation}
+Description: {description}
+
+Answer the question based on this information."""

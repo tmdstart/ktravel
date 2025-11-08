@@ -25,7 +25,7 @@ def chat_with_gpt(messages: list, model: str = None) -> str:
         response = client.chat.completions.create(
             model=model,
             messages=messages,
-            temperature=0.7,
+            temperature=0,
             max_tokens=1000
         )
         
