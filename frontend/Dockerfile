@@ -15,6 +15,7 @@ RUN npm install @hello-pangea/dnd --save
 
 # react-icons, react-calendar, MUI 관련 패키지 명시적 설치
 RUN npm install react-icons@^4.12.0 \
+    @hello-pangea/dnd\
     react-calendar@^4.6.1 \
     @mui/material@^5.15.13 \
     @mui/icons-material@^5.15.13 \

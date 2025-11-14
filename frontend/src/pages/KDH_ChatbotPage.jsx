@@ -17,7 +17,7 @@ function KDH_ChatbotPage() {
             emoji: "🌙",
             image: "https://img.news-wa.com/img/upload/2025/03/07/NWC_20250307114252.jpg.webp",
             tooltip: "Our ultimate watchtower! 'Light in Darkness' MV final battle location",
-            searchQuery: "Introduce Namsan Seoul Tower"
+            searchQuery: "Introduce N Seoul Tower at Night"
         },
         {
             id: 2,
@@ -279,13 +279,6 @@ function KDH_ChatbotPage() {
                     <span className="kdh-header-back-icon">←</span>
                     <span className="kdh-chat-title">K-POP DEMON HUNTERS</span>
                     <span className="kdh-subtitle">Trip Planning Assistant</span>
-                    <div className="weather-info">
-                        <span className="weather-icon">☀️</span>
-                        <span>Seoul weather</span>
-                        <span className="temp">20.5℃</span>
-                        <span className="date-range">2025-09-03 ~ 2025-09-07</span>
-                        <span className="more-weather">See more weather</span>
-                    </div>
                 </header>
 
                 <section className="kdh-message-area">
@@ -404,3 +397,4 @@ function KDH_ChatbotPage() {
 }
 
 export default KDH_ChatbotPage;
+

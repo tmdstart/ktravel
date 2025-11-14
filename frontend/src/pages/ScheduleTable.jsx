@@ -161,6 +161,10 @@ const ScheduleTable = ({ scheduleId, onDayTitleChange }) => {
             .catch(err => console.error("❌ description fetch 실패:", err.message));
     }, [selectedDayTitle, token, fetchWithAuth]);
 
+<<<<<<< HEAD
+=======
+    // ✅ description 저장 핸들러 (중복 제거 및 통합)
+>>>>>>> feature/3chat
     const handleSave = () => {
         if (!selectedDayTitle || !token) return;
 
@@ -171,6 +175,7 @@ const ScheduleTable = ({ scheduleId, onDayTitleChange }) => {
             .then(res => res.json())
             .then((data) => {
                 console.log("✅ 저장 성공:", data);
+<<<<<<< HEAD
                 alert('Description is Saved! ✅');
             })
             .catch(err => {
@@ -236,6 +241,15 @@ const ScheduleTable = ({ scheduleId, onDayTitleChange }) => {
             setIsSavingTable(false);
         }
     };
+=======
+                alert('Description이 저장되었습니다! ✅');
+            })
+            .catch(err => {
+                console.error("❌ 저장 실패", err.message);
+                alert(`저장 실패: ${err.message}`);
+            });
+    };
+>>>>>>> feature/3chat
 
     const handleDayTitleChange = (e) => {
         setSelectedDayTitle(e.target.value);
@@ -368,6 +382,7 @@ const ScheduleTable = ({ scheduleId, onDayTitleChange }) => {
                 <div className="kschedule-error-message">
                     <p>🛑 **에러:** {authError}</p>
                     {authError.includes('Login error') && <p>잠시 후 메인 페이지로 이동합니다...</p>}
+
                 </div>
             )}
 

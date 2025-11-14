@@ -14,6 +14,7 @@
   color: white;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  border: none !important;
 }
 
 /* 상단 헤더 */
@@ -29,6 +30,7 @@
 .kpop-header-back-icon {
   color: #ff99cc; /* 밝은 분홍 */
   margin-right: 15px;
+  cursor: pointer;
 }
 
 .kpop-chat-title {
@@ -74,8 +76,10 @@
 /* 메시지 영역 */
 .kpop-message-area {
   flex-grow: 1;
-  padding: 30px;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  max-height: calc(100vh - 100px) !important;
+  padding-bottom: 150px !important;
+  scroll-behavior: smooth;
   background: radial-gradient(
     circle at 50% 50%,
     rgba(255, 153, 204, 0.05) 0%,  /* 연분홍 반투명 */
@@ -83,6 +87,22 @@
   );
 }
 
+/* 사용자 메시지 */
+.kpop-user-message {
+  max-width: 60%;
+  padding: 12px 18px;
+  border-radius: 18px 18px 0 18px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  margin-bottom: 20px;
+  margin-left: auto;
+  line-height: 1.4;
+  display: inline-block;
+  float: right;
+  clear: both;
+}
+
+/* 챗봇 메시지 */
 .kpop-chatbot-message {
   max-width: 60%;
   padding: 12px 18px;
@@ -92,6 +112,7 @@
   margin-bottom: 20px;
   line-height: 1.4;
   display: inline-block;
+  clear: both;
 }
 
 .kpop-timestamp {
@@ -102,11 +123,253 @@
   text-align: right;
 }
 
-/* 하단 입력 영역 */
+.kpop-timestamp.typing {
+  font-style: italic;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================
+   🎬 Welcome 화면 스타일 (K-Drama 카드)
+   ============================================ */
+
+/* Welcome 컨테이너 - 테두리 완전 제거 */
+.kdrama-welcome {
+    padding: 40px 20px;
+    min-height: 100%;
+    background: linear-gradient(135deg, #d9b3ff 0%, #ffb3d9 50%, #b366ff 100%);
+    overflow-y: auto;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.kdrama-welcome * {
+    border: none !important;
+    outline: none !important;
+}
+
+/* Welcome 헤더 */
+.welcome-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(255, 153, 204, 0.5); /* 분홍 그림자 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.title-emoji {
+    font-size: 36px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+.welcome-subtitle {
+    font-size: 18px;
+    color: #ffe6f0; /* 연한 분홍 */
+    margin: 0;
+}
+
+/* 🎬 드라마 카드 그리드 - 정사각형 레이아웃 */
+.dramas-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 25px !important;
+    margin-bottom: 20px !important;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 드라마 카드 - 정사각형 (250px x 250px) */
+.drama-card {
+    position: relative !important;
+    height: 250px !important; /* 🎯 정사각형 높이 */
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.drama-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(255, 153, 204, 0.6) !important; /* 분홍 그림자 */
+}
+
+/* 🎨 배경 이미지 */
+.drama-image {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    transition: transform 0.4s ease;
+    /* background-image는 인라인 스타일로 들어옴 */
+}
+
+.drama-card:hover .drama-image {
+    transform: scale(1.1);
+}
+
+/* 🎨 오버레이 - 보라/분홍 색상 */
+.drama-overlay {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(135deg, rgba(204, 102, 255, 0.6) 0%, rgba(153, 51, 255, 0.7) 100%) !important;
+    /* 보라색 그라데이션 */
+    z-index: 2 !important;
+    transition: opacity 0.3s ease;
+    border: none !important;
+}
+
+.drama-card:hover .drama-overlay {
+    opacity: 0.85 !important;
+}
+
+/* 텍스트 컨텐츠 */
+.drama-content {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 3 !important;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.drama-emoji {
+    font-size: 56px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 4px 15px rgba(255, 255, 255, 0.4));
+    display: block;
+}
+
+.drama-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 8px;
+    text-shadow: 0 3px 15px rgba(0, 0, 0, 0.6);
+    display: block;
+}
+
+.drama-name-en {
+    font-size: 15px;
+    color: #e8e8ff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    display: block;
+}
+
+/* Hover 툴팁 */
+.drama-hover {
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px 20px;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 4 !important;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drama-card:hover .drama-hover {
+    transform: translateY(0);
+}
+
+.hover-text {
+    color: white;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 15px 0;
+    font-weight: 400;
+}
+
+.hover-cta {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #cc66ff 0%, #ff66b3 100%); /* 보라→분홍 */
+    color: white;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(204, 102, 255, 0.4);
+}
+
+/* 푸터 완전히 숨기기 */
+.welcome-footer {
+    display: none !important;
+}
+
+/* 카드 등장 애니메이션 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.drama-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+/* 순차적 등장 */
+.drama-card:nth-child(1) { animation-delay: 0.1s; }
+.drama-card:nth-child(2) { animation-delay: 0.2s; }
+.drama-card:nth-child(3) { animation-delay: 0.3s; }
+.drama-card:nth-child(4) { animation-delay: 0.4s; }
+.drama-card:nth-child(5) { animation-delay: 0.5s; }
+.drama-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* ============================================
+   하단 입력 영역 (채팅 푸터)
+   ============================================ */
+
 .kpop-chat-footer {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 50% !important;
   padding: 20px 30px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   background-color: rgba(128, 0, 128, 0.45); /* 보라 투명 */
+  z-index: 1000 !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .kpop-suggested-routes {
@@ -131,36 +394,38 @@
   border-radius: 20px;
   font-size: 0.85em;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  border: 1px solid;
 }
 
 /* 태그별 색상 - 분홍 + 보라 컨셉 */
 .kpop-tag-kpop {
   background-color: #ff99cc; /* 분홍 */
   color: white;
-  border: 1px solid #ff99cc;
+  border-color: #ff99cc;
 }
 
 .kpop-tag-hotplace {
   background-color: #cc66ff; /* 보라 */
   color: white;
-  border: 1px solid #cc66ff;
+  border-color: #cc66ff;
 }
 
 .kpop-tag-activity {
   background-color: #ff66b3; /* 진분홍 */
   color: white;
-  border: 1px solid #ff66b3;
+  border-color: #ff66b3;
 }
 
 .kpop-tag-ocean {
   background-color: #9933ff; /* 진보라 */
   color: white;
-  border: 1px solid #9933ff;
+  border-color: #9933ff;
 }
 
 .kpop-tag:hover {
-  opacity: 0.85;
+  opacity: 0.8;
+  transform: translateY(-2px);
 }
 
 /* 입력 바 */
@@ -185,10 +450,83 @@
   color: #ffe6f0;
 }
 
+.kpop-input-bar input:focus {
+  background-color: rgba(255, 153, 204, 0.4);
+}
+
 .kpop-search-icon {
   position: absolute;
   right: 15px;
   color: #ff99cc;
   font-size: 1.5em;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.kpop-search-icon:hover {
+  transform: scale(1.2);
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .dramas-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    .drama-card {
+        height: 220px !important;
+    }
+
+    .welcome-title {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .kdrama-welcome {
+        padding: 30px 15px;
+    }
+
+    .dramas-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .drama-card {
+        height: 200px !important;
+    }
+
+    .welcome-title {
+        font-size: 24px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .kpop-chat-footer {
+        width: 100% !important;
+    }
+}
+
+/* ============================================
+   전역 테두리 제거
+   ============================================ */
+
+div[class*="welcome"] {
+    border: none !important;
+}
+
+div[class*="drama"] {
+    border: none !important;
+}
+
+.kdrama-welcome,
+.kdrama-welcome > *,
+.kdrama-welcome > * > * {
+    box-sizing: border-box !important;
+    border: 0 !important;
+    outline: 0 !important;
 }

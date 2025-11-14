@@ -1,6 +1,6 @@
 /* KFood_ChatbotPage.css */
 
-/* 전체 배경과 주요 색상: 차분한 갈색/남색 톤 */
+/* 전체 배경과 주요 색상: 차분한 갈색/남색 톤 (유지) */
 .kfood-chatbot-container {
   display: flex;
   width: 50vw;
@@ -14,6 +14,7 @@
   color: white;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  border: none !important;
 }
 
 /* 오른쪽 메인 채팅 영역 */
@@ -21,6 +22,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  border: none !important;
 }
 
 .kfood-chat-header {
@@ -35,6 +37,7 @@
 .kfood-header-back-icon {
   color: #d6b27c;
   margin-right: 15px;
+  cursor: pointer;
 }
 
 .kfood-chat-title {
@@ -50,39 +53,13 @@
   margin-right: auto;
 }
 
-.kfood-weather-info {
-  display: flex;
-  align-items: center;
-  font-size: 0.8em;
-  color: #ccc;
-}
-
-.kfood-weather-info svg {
-  font-size: 1em;
-  margin-right: 5px;
-}
-
-.kfood-temp {
-  font-weight: bold;
-  color: #fff;
-  margin: 0 5px;
-}
-
-.kfood-date-range {
-  margin-right: 10px;
-}
-
-.kfood-more-weather {
-  color: #d6b27c;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
 /* 메시지 영역 */
 .kfood-message-area {
   flex-grow: 1;
-  padding: 30px;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  max-height: calc(100vh - 100px) !important;
+  padding-bottom: 150px !important;
+  scroll-behavior: smooth;
   background: radial-gradient(
     circle at 50% 50%,
     rgba(214, 178, 124, 0.05) 0%,
@@ -109,18 +86,249 @@
   text-align: right;
 }
 
-/* 하단 입력 영역 */
-.kfood-chat-footer {
-  padding: 20px 30px;
+/* ============================================
+   🍽️ Welcome 화면 스타일 (KDH 카드 구조 적용)
+   ============================================ */
+
+/* Welcome 컨테이너 - 테두리 완전 제거 */
+.restaurant-welcome {
+    padding: 40px 20px;
+    min-height: 100%;
+    background: linear-gradient(135deg, #2b2b2f 0%, #4b3f36 50%, #1f1d22 100%);
+    overflow-y: auto;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.restaurant-welcome * {
+    border: none !important;
+    outline: none !important;
+}
+
+/* Welcome 헤더 */
+.welcome-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(214, 178, 124, 0.5); /* KFood 색상 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.title-emoji {
+    font-size: 36px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+.welcome-subtitle {
+    font-size: 18px;
+    color: #b0a090; /* KFood 색상 */
+    margin: 0;
+}
+
+/* 🍽️ 레스토랑 카드 그리드 - 정사각형 레이아웃 */
+.restaurants-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 25px !important;
+    margin-bottom: 20px !important;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 레스토랑 카드 - 정사각형 (250px x 250px) */
+.restaurant-card {
+    position: relative !important;
+    height: 250px !important; /* 🎯 정사각형 높이 */
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.restaurant-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(214, 178, 124, 0.6) !important; /* KFood 색상 */
+}
+
+/* 🎨 배경 이미지 */
+.restaurant-image {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    transition: transform 0.4s ease;
+    /* background-image는 인라인 스타일로 들어옴 */
+}
+
+.restaurant-card:hover .restaurant-image {
+    transform: scale(1.1);
+}
+
+/* 🎨 오버레이 - KFood 색상 */
+.restaurant-overlay {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(135deg, rgba(214, 178, 124, 0.6) 0%, rgba(140, 106, 77, 0.7) 100%) !important;
+    z-index: 2 !important;
+    transition: opacity 0.3s ease;
+    border: none !important;
+}
+
+.restaurant-card:hover .restaurant-overlay {
+    opacity: 0.85 !important;
+}
+
+/* 텍스트 컨텐츠 */
+.restaurant-content {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 3 !important;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.restaurant-emoji {
+    font-size: 56px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 4px 15px rgba(255, 255, 255, 0.4));
+    display: block;
+}
+
+.restaurant-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 8px;
+    text-shadow: 0 3px 15px rgba(0, 0, 0, 0.6);
+    display: block;
+}
+
+.restaurant-name-en {
+    font-size: 15px;
+    color: #e8e8ff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    display: block;
+}
+
+/* Hover 툴팁 */
+.restaurant-hover {
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px 20px;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 4 !important;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.restaurant-card:hover .restaurant-hover {
+    transform: translateY(0);
+}
+
+.hover-text {
+    color: white;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 15px 0;
+    font-weight: 400;
+}
+
+.hover-cta {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #d6b27c 0%, #a87e5b 100%); /* KFood 색상 */
+    color: white;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(214, 178, 124, 0.4);
+}
+
+/* 푸터 완전히 숨기기 */
+.welcome-footer {
+    display: none !important;
+}
+
+/* 카드 등장 애니메이션 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.restaurant-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+/* 순차적 등장 */
+.restaurant-card:nth-child(1) { animation-delay: 0.1s; }
+.restaurant-card:nth-child(2) { animation-delay: 0.2s; }
+.restaurant-card:nth-child(3) { animation-delay: 0.3s; }
+.restaurant-card:nth-child(4) { animation-delay: 0.4s; }
+.restaurant-card:nth-child(5) { animation-delay: 0.5s; }
+.restaurant-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* ============================================
+   하단 입력 영역 (채팅 푸터)
+   ============================================ */
+
+.chat-footer {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 50% !important;
+  background: rgba(0, 0, 0, 0.45) !important;
+  padding: 10px 20px !important;
+  z-index: 1000 !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background-color: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.kfood-suggested-routes {
-  margin-bottom: 15px;
+.suggested-routes {
+  margin-bottom: 8px !important;
 }
 
-.kfood-suggest-title {
+.suggest-title {
   font-size: 0.8em;
   color: #b0a090;
   font-weight: bold;
@@ -128,73 +336,156 @@
   margin-bottom: 8px;
 }
 
-.kfood-tags {
+.tags {
   display: flex;
   gap: 10px;
+  margin-bottom: 8px !important;
 }
 
-.kfood-tag {
+.tag {
   padding: 5px 12px;
   border-radius: 20px;
   font-size: 0.85em;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  border: 1px solid;
 }
 
-/* 태그별 색상 - KFood 컨셉 */
-.kfood-tag-kpop {
+/* 태그별 색상 - KFood 컨셉 유지 */
+.tag-korean {
   background-color: #d6b27c;
   color: white;
-  border: 1px solid #d6b27c;
+  border-color: #d6b27c;
 }
 
-.kfood-tag-hotplace {
+.tag-bbq {
   background-color: #c79f7f;
   color: white;
-  border: 1px solid #c79f7f;
+  border-color: #c79f7f;
 }
 
-.kfood-tag-activity {
+.tag-festival {
   background-color: #a87e5b;
   color: white;
-  border: 1px solid #a87e5b;
+  border-color: #a87e5b;
 }
 
-.kfood-tag-ocean {
+.tag-attraction {
   background-color: #8c6a4d;
   color: white;
-  border: 1px solid #8c6a4d;
+  border-color: #8c6a4d;
 }
 
-.kfood-tag:hover {
+.tag:hover {
   opacity: 0.8;
+  transform: translateY(-2px);
 }
 
-.kfood-input-bar {
+/* 입력창 컨테이너 */
+.input-bar {
+  position: relative;
   display: flex;
   align-items: center;
-  position: relative;
+  width: 100%;
 }
 
-.kfood-input-bar input {
-  flex-grow: 1;
-  padding: 12px 50px 12px 20px;
-  border-radius: 30px;
-  border: none;
-  background-color: #4b3f36;
-  color: white;
-  font-size: 1em;
+.input-bar input {
+  flex: 1;
+  width: 100%;
+  padding: 12px 50px 12px 20px !important;
+  background: #4b3f36 !important; /* KFood 색상 */
+  border: none !important;
+  border-radius: 30px !important;
+  color: white !important;
+  font-size: 1em !important;
   outline: none;
 }
 
-.kfood-input-bar input::placeholder {
-  color: #b0a090;
+.input-bar input::placeholder {
+  color: #b0a090; /* KFood 색상 */
 }
 
-.kfood-search-icon {
-  position: absolute;
-  right: 15px;
-  color: #d6b27c;
+.input-bar input:focus {
+  background: rgba(75, 63, 54, 0.8) !important;
+}
+
+/* 돋보기를 입력창 안으로 */
+.input-bar .search-icon {
+  position: absolute !important;
+  right: 15px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
   font-size: 1.5em;
+  color: #d6b27c; /* KFood 색상 */
   cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s;
+}
+
+.input-bar .search-icon:hover {
+  transform: translateY(-50%) scale(1.2) !important;
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .restaurants-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    .restaurant-card {
+        height: 220px !important;
+    }
+
+    .welcome-title {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .restaurant-welcome {
+        padding: 30px 15px;
+    }
+
+    .restaurants-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .restaurant-card {
+        height: 200px !important;
+    }
+
+    .welcome-title {
+        font-size: 24px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .chat-footer {
+        width: 100% !important;
+    }
+}
+
+/* ============================================
+   전역 테두리 제거
+   ============================================ */
+
+div[class*="welcome"] {
+    border: none !important;
+}
+
+div[class*="restaurant"] {
+    border: none !important;
+}
+
+.restaurant-welcome,
+.restaurant-welcome > *,
+.restaurant-welcome > * > * {
+    box-sizing: border-box !important;
+    border: 0 !important;
+    outline: 0 !important;
 }

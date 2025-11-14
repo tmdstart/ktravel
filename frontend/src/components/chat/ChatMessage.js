@@ -35,7 +35,7 @@ function ChatMessage({ message }) {
                 <div className="message-images-below">
                     {message.results.map((result, idx) => (
                         <div key={idx} className="image-wrapper-below">
-                            {/* 이미지 */}
+                            {/* 🎭 축제 이미지 */}
                             {result.type === 'festival' && result.image_url && (
                                 <img 
                                     src={result.image_url}
@@ -47,6 +47,7 @@ function ChatMessage({ message }) {
                                 />
                             )}
                             
+                            {/* 📍 관광명소 이미지 */}
                             {result.type === 'attraction' && result.image_urls && (
                                 <img 
                                     src={Array.isArray(result.image_urls) ? result.image_urls[0] : result.image_urls}
@@ -58,19 +59,95 @@ function ChatMessage({ message }) {
                                 />
                             )}
                             
+                            {/* 🍽️ 레스토랑 이미지 */}
+                            {result.type === 'restaurant' && result.image_url && (
+                                <img 
+                                    src={result.image_url}
+                                    alt={result.restaurant_name || result.title}
+                                    className="content-image-below"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            )}
+
+                            {/* 🎬 K-Content(드라마) 이미지 - 새로 추가! */}
+                            {result.type === 'kcontent' && result.thumbnail && (
+                                <img 
+                                    src={result.thumbnail}
+                                    alt={`${result.drama_name} - ${result.location_name}`}
+                                    className="content-image-below"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            )}
+                            
                             {/* 이미지 하단 정보 */}
                             <div className="image-caption-below">
-                                <span className="caption-title-below">{result.title}</span>
+                                {/* 🎭 축제 제목 */}
+                                {result.type === 'festival' && (
+                                    <span className="caption-title-below">{result.title}</span>
+                                )}
                                 
+                                {/* 📍 관광명소 제목 */}
+                                {result.type === 'attraction' && (
+                                    <span className="caption-title-below">{result.title}</span>
+                                )}
+                                
+                                {/* 🍽️ 레스토랑 제목 */}
+                                {result.type === 'restaurant' && (
+                                    <span className="caption-title-below">
+                                        🍽️ {result.restaurant_name || result.title}
+                                    </span>
+                                )}
+
+                                {/* 🎬 K-Content 제목 - 새로 추가! */}
+                                {result.type === 'kcontent' && (
+                                    <span className="caption-title-below">
+                                        🎬 {result.drama_name} - {result.location_name}
+                                    </span>
+                                )}
+                                
+                                {/* 🎭 축제 날짜 */}
                                 {result.type === 'festival' && result.start_date && result.end_date && (
                                     <span className="caption-date-below">
                                         📅 {result.start_date} ~ {result.end_date}
                                     </span>
                                 )}
                                 
+                                {/* 📍 관광명소 주소 */}
                                 {result.type === 'attraction' && result.address && (
                                     <span className="caption-address-below">
                                         📍 {result.address}
+                                    </span>
+                                )}
+                                
+                                {/* 🍽️ 레스토랑 위치 */}
+                                {result.type === 'restaurant' && result.place && (
+                                    <span className="caption-address-below">
+                                        📍 {result.place}
+                                    </span>
+                                )}
+                                
+                                {/* 🍽️ 레스토랑 지하철역 */}
+                                {result.type === 'restaurant' && result.subway && (
+                                    <span className="caption-address-below">
+                                        🚇 {result.subway}
+                                    </span>
+                                )}
+
+                                {/* 🎬 K-Content 주소 - 새로 추가! */}
+                                {result.type === 'kcontent' && result.address && (
+                                    <span className="caption-address-below">
+                                        📍 {result.address}
+                                    </span>
+                                )}
+
+                                {/* 🎬 K-Content 카테고리 - 새로 추가! */}
+                                {result.type === 'kcontent' && result.category && (
+                                    <span className="caption-address-below">
+                                        🏷️ {result.category}
                                     </span>
                                 )}
                             </div>
@@ -79,7 +156,9 @@ function ChatMessage({ message }) {
                 </div>
             )}
 
-            {/* 🎯 기존 축제만 표시 (하위 호환성) */}
+            {/* 🎯 기존 개별 타입 표시 (하위 호환성) */}
+            
+            {/* 축제만 표시 */}
             {!message.results && message.festivals && message.festivals.length > 0 && (
                 <div className="message-images-below">
                     {message.festivals.map((festival, idx) => (
@@ -99,6 +178,43 @@ function ChatMessage({ message }) {
                                         {festival.start_date && festival.end_date && (
                                             <span className="caption-date-below">
                                                 📅 {festival.start_date} ~ {festival.end_date}
+                                            </span>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* K-Content만 표시 (개별 호환성) */}
+            {!message.results && message.kcontents && message.kcontents.length > 0 && (
+                <div className="message-images-below">
+                    {message.kcontents.map((kcontent, idx) => (
+                        <div key={idx} className="image-wrapper-below">
+                            {kcontent.thumbnail && (
+                                <>
+                                    <img 
+                                        src={kcontent.thumbnail}
+                                        alt={`${kcontent.drama_name} - ${kcontent.location_name}`}
+                                        className="content-image-below"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                        }}
+                                    />
+                                    <div className="image-caption-below">
+                                        <span className="caption-title-below">
+                                            🎬 {kcontent.drama_name} - {kcontent.location_name}
+                                        </span>
+                                        {kcontent.address && (
+                                            <span className="caption-address-below">
+                                                📍 {kcontent.address}
+                                            </span>
+                                        )}
+                                        {kcontent.category && (
+                                            <span className="caption-address-below">
+                                                🏷️ {kcontent.category}
                                             </span>
                                         )}
                                     </div>

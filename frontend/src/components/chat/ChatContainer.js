@@ -29,7 +29,7 @@ function ChatContainer({ onDestinationsUpdate }) {
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
 
-    // 2. 봇 메시지 초기화 (빈 상태)
+    // 2. 봇 메시지 초기화 (빈 상태) - 🍽️ restaurants 추가!
     const botMessageId = Date.now();
     const initialBotMessage = {
       id: botMessageId,
@@ -40,7 +40,8 @@ function ChatContainer({ onDestinationsUpdate }) {
       timestamp: new Date(),
       results: null,
       festivals: null,
-      attractions: null
+      attractions: null,
+      restaurants: null // 🍽️ 레스토랑 추가
     };
     setMessages((prev) => [...prev, initialBotMessage]);
 
@@ -91,7 +92,7 @@ function ChatContainer({ onDestinationsUpdate }) {
           ));
         },
 
-        // ✅ 완료!
+        // ✅ 완료! - 🍽️ restaurants 추가!
         onComplete: (data) => {
           setMessages(prev => prev.map(msg => 
             msg.id === botMessageId 
@@ -102,6 +103,8 @@ function ChatContainer({ onDestinationsUpdate }) {
                   results: data.results || (data.result ? [data.result] : null),
                   festivals: data.festivals,
                   attractions: data.attractions,
+                  restaurants: data.restaurants, // 🍽️ 레스토랑 추가
+                  hasRestaurants: data.has_restaurants, // 🍽️ 레스토랑 존재 여부
                   conversId: data.convers_id
                 }
               : msg
@@ -147,7 +150,7 @@ function ChatContainer({ onDestinationsUpdate }) {
     }
   };
 
-  // 일반 메시지 전송 (기존 방식 - 백업용)
+  // 일반 메시지 전송 (기존 방식 - 백업용) - 🍽️ restaurants 추가!
   const handleSendMessage = async (messageText) => {
     // 사용자 메시지 추가
     const userMessage = {
@@ -162,14 +165,16 @@ function ChatContainer({ onDestinationsUpdate }) {
       // API 호출
       const response = await chatService.sendMessage(messageText);
 
-      // GPT 응답 추가
+      // GPT 응답 추가 - 🍽️ restaurants 추가!
       const gptMessage = {
         text: response.response,
         isUser: false,
         timestamp: new Date(),
         results: response.results,
         festivals: response.festivals,
-        attractions: response.attractions
+        attractions: response.attractions,
+        restaurants: response.restaurants, // 🍽️ 레스토랑 추가
+        hasRestaurants: response.has_restaurants // 🍽️ 레스토랑 존재 여부
       };
       setMessages((prev) => [...prev, gptMessage]);
 
