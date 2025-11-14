@@ -12,6 +12,8 @@ import Sidebar from './components/Sidebar.jsx';
 import KPathIntegrationPage from './pages/KPathIntegrationPage.jsx';
 import ConcertPage from './pages/ConcertPage';
 import KMediaPage from './pages/KMediaPage.jsx';
+import Dashboard from './pages/MydashPage.jsx';
+import UserDashboard from './pages/UserDashboard';
 
 
 function App() {
@@ -44,16 +46,14 @@ function App() {
                     <Routes>
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/signup" element={<SignupPage />} />
-                        <Route path="/dashboard" element={<DashboardPage />} />
                         <Route path="/chatbot/kpop-star" element={<Kpop_ChatbotMapLayout />} />
                         <Route path="/chatbot/k-food" element={<KFood_ChatbotMapLayout />} />
                         <Route path="/" element={<Concept_MainPage />} />
                         <Route path="/chatbot/demon-hunters" element={<KDH_ChatbotMapLayout />} />
                         <Route path="/festivals" element={<ConcertPage />} />
                         <Route path="/k-pathidea" element={<KPathIntegrationPage />} />
-                        <Route path="/my-dashboard" element={<KPathIntegrationPage />} />
                         <Route path="/k-spotlight" element={<KMediaPage />} />
-                       
+                        <Route path="/dashboard" element={<UserDashboard />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </main>

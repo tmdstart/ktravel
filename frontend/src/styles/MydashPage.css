@@ -1,0 +1,125 @@
+/* 전체 대시보드 컨테이너 스타일 */
+.dashboard-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-container h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 30px 0;
+}
+
+/* 사용자 프로필 섹션 스타일 */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #007bff;
+}
+
+.profile-section h2 {
+    margin: 5px 0;
+    color: #007bff;
+}
+
+.profile-section p {
+    color: #666;
+}
+
+/* 아이템 목록 스타일 */
+.item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.bookmarked-section h2 {
+    color: #ffc107;
+}
+
+/* 개별 아이템 카드 스타일 */
+.item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-info {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.item-category {
+    font-size: 0.8em;
+    color: #999;
+    font-weight: bold;
+}
+
+.item-title {
+    margin: 5px 0 0 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+/* 북마크 버튼 스타일 */
+.bookmark-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    padding: 0;
+    transition: transform 0.1s;
+    outline: none;
+}
+
+.bookmark-btn:hover {
+    transform: scale(1.1);
+}
+
+/* 북마크된 상태의 버튼 스타일 */
+.bookmark-btn.active {
+    color: #ffc107; /* 채워진 별 색상 (노란색) */
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px dashed #ddd;
+    border-radius: 6px;
+}

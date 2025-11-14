@@ -10,9 +10,8 @@ export default function KMediaCard({ item, onLikeToggle, onCardClick }) {
 
   return (
     <div className="kmedia-card" onClick={() => onCardClick(item.id)}>
-      {/* 썸네일 표시 */}
       <img
-        src={item.thumbnail || "/placeholder.png"} // 썸네일 없으면 대체 이미지
+        src={item.thumbnail || "/placeholder.png"}
         alt={item.title}
         className="kmedia-image"
       /> 

@@ -121,3 +121,26 @@ export async function fetchShuffledKContentList(skip = 0, limit = 100) {
         throw error;
     }
 }
+
+
+//----------------------------------------------------------------------
+// 🆕 하트 추가 함수 
+//----------------------------------------------------------------------
+
+
+// 좋아요 추가하는 함수
+export const addLike = async (contentId) => {
+    const response = await fetch(`/api/kcontent/${contentId}/like`, {
+        method: 'POST',
+        // 사용자 인증 정보 포함
+    });
+    return await response.json();
+}
+
+// 좋아요 취소하는 함수
+export const removeLike = async (contentId) => {
+    const response = await fetch(`/api/kcontent/${contentId}/like`, {
+        method: 'DELETE',
+    });
+    return await response.json();
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 import { Link } from 'react-router-dom';
-import { FaStar, FaMusic, FaThLarge, FaCompass, FaCalendar  } from 'react-icons/fa';
+import { FaStar, FaMusic, FaThLarge, FaCompass, FaCalendar, FaBookmark   } from 'react-icons/fa';
 
 
 const Sidebar = () => {
@@ -44,7 +44,7 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/my-dashboard">
+                        <Link to="/dashboard">
                             <FaThLarge />
                             <span>My Dashboard</span>
                         </Link>
