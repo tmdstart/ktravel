@@ -39,7 +39,10 @@ from app.utils.prompt2 import (
 class ChatRestService:
     
     # 🎯 Qdrant 설정 (3개 컬렉션 모두 사용)
-    QDRANT_URL = "http://172.17.0.1:6333"
+    #QDRANT_URL = "http://172.17.0.1:6333"
+    QDRANT_URL = os.getenv("QDRANT_URL", "http://172.17.0.1:6333")
+    QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+    
     FESTIVAL_COLLECTION = "seoul-festival"
     ATTRACTION_COLLECTION = "seoul-attraction"
     RESTAURANT_COLLECTION = "seoul-restaurant"
@@ -56,17 +59,30 @@ class ChatRestService:
         if ChatRestService._embedding_model is None:
             ChatRestService._embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
         return ChatRestService._embedding_model
-    
+        
     @staticmethod
     def _get_qdrant_client():
-        """Qdrant 클라이언트 싱글톤 패턴으로 재사용"""
+        """Qdrant 클라이언트 싱글톤 패턴으로 재사용 - 클라우드/로컬 자동 선택"""
         if ChatRestService._qdrant_client is None:
-            ChatRestService._qdrant_client = QdrantClient(
-                url=ChatRestService.QDRANT_URL,
-                timeout=60,
-                prefer_grpc=False
-            )
-        return ChatRestService._qdrant_client
+            # API 키 있으면 클라우드 모드
+            if ChatRestService.QDRANT_API_KEY:
+                ChatRestService._qdrant_client = QdrantClient(
+                    url=ChatRestService.QDRANT_URL,
+                    api_key=ChatRestService.QDRANT_API_KEY,
+                    timeout=60,
+                    prefer_grpc=False
+                )
+                print(f"✅ Qdrant Cloud 연결 (Restaurant): {ChatRestService.QDRANT_URL}")
+            else:
+                ChatRestService._qdrant_client = QdrantClient(
+                    url=ChatRestService.QDRANT_URL,
+                    timeout=60,
+                    prefer_grpc=False
+                )
+                print(f"✅ Qdrant Local 연결 (Restaurant): {ChatRestService.QDRANT_URL}")
+        return ChatRestService._qdrant_client        
+    
+    
     
     # ===== 🔧 검색어 개선 기능 =====
     

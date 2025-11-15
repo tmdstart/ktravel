@@ -6,9 +6,12 @@ import os
 import random
 import re
 import asyncio
+from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
 from qdrant_client import QdrantClient
 from concurrent.futures import ThreadPoolExecutor
+
+load_dotenv()
 
 from app.models.conversation import Conversation  
 from app.models.festival import Festival
@@ -18,18 +21,20 @@ from app.utils.prompts import (
     KPOP_ATTRACTION_QUICK_PROMPT,
     COMPARISON_PROMPT,
     ADVICE_PROMPT,
-    RESTAURANT_QUICK_PROMPT,  # 🍽️ 레스토랑 프롬프트들
+    RESTAURANT_QUICK_PROMPT,
     RESTAURANT_COMPARISON_PROMPT,
     RESTAURANT_ADVICE_PROMPT
 )
 
 class ChatService:
     
-    # 🎯 Qdrant 설정
-    QDRANT_URL = "http://172.17.0.1:6333"
+    # 🎯 Qdrant 설정 - 환경 변수에서 읽기
+    QDRANT_URL = os.getenv("QDRANT_URL", "http://172.17.0.1:6333")
+    QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+    
     COLLECTION_NAME = "seoul-festival"
     ATTRACTION_COLLECTION = "seoul-attraction"
-    RESTAURANT_COLLECTION = "seoul-restaurant"  # 🍽️ 레스토랑 컬렉션 추가
+    RESTAURANT_COLLECTION = "seoul-restaurant"
     
     # 🚀 임베딩 모델 캐싱 (재사용)
     _embedding_model = None
@@ -46,13 +51,24 @@ class ChatService:
     
     @staticmethod
     def _get_qdrant_client():
-        """Qdrant 클라이언트 싱글톤 패턴으로 재사용"""
+        """Qdrant 클라이언트 싱글톤 패턴으로 재사용 - 클라우드/로컬 자동 선택"""
         if ChatService._qdrant_client is None:
-            ChatService._qdrant_client = QdrantClient(
-                url=ChatService.QDRANT_URL,
-                timeout=60,
-                prefer_grpc=False
-            )
+            # API 키 있으면 클라우드 모드
+            if ChatService.QDRANT_API_KEY:
+                ChatService._qdrant_client = QdrantClient(
+                    url=ChatService.QDRANT_URL,
+                    api_key=ChatService.QDRANT_API_KEY,
+                    timeout=60,
+                    prefer_grpc=False
+                )
+                print(f"✅ Qdrant Cloud 연결: {ChatService.QDRANT_URL}")
+            else:
+                ChatService._qdrant_client = QdrantClient(
+                    url=ChatService.QDRANT_URL,
+                    timeout=60,
+                    prefer_grpc=False
+                )
+                print(f"✅ Qdrant Local 연결: {ChatService.QDRANT_URL}")
         return ChatService._qdrant_client
     
     # ===== 🔧 검색어 개선 기능 =====

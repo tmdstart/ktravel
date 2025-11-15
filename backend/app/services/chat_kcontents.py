@@ -29,7 +29,11 @@ from app.utils.prompt3 import (
 class ChatKContentsService:
     
     # 🎯 Qdrant 설정 (KContents만)
-    QDRANT_URL = "http://172.17.0.1:6333"
+    #QDRANT_URL = "http://172.17.0.1:6333"
+    QDRANT_URL = os.getenv("QDRANT_URL", "http://172.17.0.1:6333")
+    QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+    
+    
     KCONTENT_COLLECTION = "seoul-kcontents"
     
     # 🚀 임베딩 모델 캐싱 (재사용)
@@ -44,16 +48,27 @@ class ChatKContentsService:
         if ChatKContentsService._embedding_model is None:
             ChatKContentsService._embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
         return ChatKContentsService._embedding_model
-    
+        
     @staticmethod
     def _get_qdrant_client():
-        """Qdrant 클라이언트 싱글톤 패턴으로 재사용"""
+        """Qdrant 클라이언트 싱글톤 패턴으로 재사용 - 클라우드/로컬 자동 선택"""
         if ChatKContentsService._qdrant_client is None:
-            ChatKContentsService._qdrant_client = QdrantClient(
-                url=ChatKContentsService.QDRANT_URL,
-                timeout=60,
-                prefer_grpc=False
-            )
+            # API 키 있으면 클라우드 모드
+            if ChatKContentsService.QDRANT_API_KEY:
+                ChatKContentsService._qdrant_client = QdrantClient(
+                    url=ChatKContentsService.QDRANT_URL,
+                    api_key=ChatKContentsService.QDRANT_API_KEY,
+                    timeout=60,
+                    prefer_grpc=False
+                )
+                print(f"✅ Qdrant Cloud 연결 (KContents): {ChatKContentsService.QDRANT_URL}")
+            else:
+                ChatKContentsService._qdrant_client = QdrantClient(
+                    url=ChatKContentsService.QDRANT_URL,
+                    timeout=60,
+                    prefer_grpc=False
+                )
+                print(f"✅ Qdrant Local 연결 (KContents): {ChatKContentsService.QDRANT_URL}")
         return ChatKContentsService._qdrant_client
     
     # ===== 🔧 검색어 개선 기능 =====
