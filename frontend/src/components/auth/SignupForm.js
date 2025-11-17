@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../../services/authService';
 import ErrorMessage from '../common/ErrorMessage';
-import './AuthForms.css';
+import './SignupForm.css';
 
 function SignupForm() {
   const navigate = useNavigate();

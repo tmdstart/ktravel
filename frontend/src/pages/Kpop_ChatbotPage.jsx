@@ -6,6 +6,37 @@ import {
     Search,
 } from '@mui/icons-material';
 
+// 1. ResultCard 컴포넌트를 Kpop_ChatbotPage 함수 밖으로 이동하여 명확하게 정의합니다.
+// (함수 내부에 있어도 되지만, 일반적으로 컴포넌트 파일 상단에 정의하는 것이 좋습니다.)
+const ResultCard = ({ data }) => {
+    // data 객체에서 필요한 속성들을 추출합니다.
+    const location_name = data.location_name || 'N/A';
+    const drama_name_en = data.drama_name_en || 'N/A';
+    const drama_name = data.drama_name || 'N/A';
+    const address = data.address || 'N/A';
+    const image_url = data.image_url || ''; // 이미지가 없을 경우 빈 문자열
+    
+    // tip 변수는 HTML 또는 Markdown이 섞여있을 수 있으므로 별도 처리
+    const tip = data.tip || 'No scene info available.'; 
+
+    // 고객님이 원하시는 전체 내용이 출력되는 JSX를 반환합니다.
+    return (
+        <div className="result-card-simple">
+            💙 **Location:** {location_name}<br />
+            🎬 **Drama:** {drama_name_en} ({drama_name})<br />
+            📍 **Address:** {address}<br />
+            🖼 **Scene Image:**<br />
+            {image_url && <img src={image_url} alt={drama_name} width="300" />}
+            <br />
+            ✨ **Scene Info:**<br />
+            
+            {/* 💡 문제 해결: tip의 내용 전체를 HTML로 렌더링하여 줄 바꿈과 포맷을 유지 */}
+            <div dangerouslySetInnerHTML={{ __html: tip }} /> 
+        </div>
+    );
+};
+
+
 function Kpop_ChatbotPage() {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
@@ -13,8 +44,8 @@ function Kpop_ChatbotPage() {
     const messageEndRef = useRef(null);
     const [streamingMessage, setStreamingMessage] = useState('');
 
-    // 🎬 인기 K-Drama 6개 (고정)
     const popularDramas = [
+        // ... (popularDramas 배열 내용은 변경 없음)
         {
             id: 1,
             drama_name: "사랑의 불시착",
@@ -71,18 +102,15 @@ function Kpop_ChatbotPage() {
         }
     ];
 
-    // 자동 스크롤
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, streamingMessage]);
 
-    // Welcome 카드 클릭 핸들러
     const handleWelcomeCardClick = (drama) => {
         const query = `Tell me about ${drama.drama_name} filming location`;
         handleSendMessage(query);
     };
 
-    // 메시지 전송 (스트리밍)
     const handleSendMessage = async (customMessage = null) => {
         const messageToSend = customMessage || inputMessage.trim();
         if (!messageToSend || isLoading) return;
@@ -90,7 +118,6 @@ function Kpop_ChatbotPage() {
         setInputMessage('');
         setIsLoading(true);
 
-        // 사용자 메시지 추가
         const userMessage = {
             type: 'user',
             content: messageToSend,
@@ -105,8 +132,17 @@ function Kpop_ChatbotPage() {
                 throw new Error('인증 토큰이 없습니다. 로그인이 필요합니다.');
             }
             
-            const response = await fetch('http://localhost:8000/api/chat/kcontents/send/stream', {
+            const apiUrl = 'http://localhost:8000/api/chat/kcontents/send/stream';
+            
+            console.log('📤 Sending request:', {
+                url: apiUrl,
                 method: 'POST',
+                message: messageToSend,
+                hasToken: !!token
+            });
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -114,16 +150,33 @@ function Kpop_ChatbotPage() {
                 body: JSON.stringify({ message: messageToSend })
             });
 
+            console.log('📥 Response:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+
             if (!response.ok) {
                 if (response.status === 401) {
                     throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
                 }
-                throw new Error(`HTTP ${response.status}: 스트리밍 요청 실패`);
+                if (response.status === 405) {
+                    throw new Error('API 메서드 오류: POST 요청이 필요합니다.');
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let accumulatedText = '';
+            
+            let finalBotMessage = {
+                type: 'bot',
+                content: '',
+                timestamp: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+                results: [],
+                map_markers: []
+            };
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -136,60 +189,49 @@ function Kpop_ChatbotPage() {
                     if (line.startsWith('data: ')) {
                         try {
                             const jsonData = JSON.parse(line.slice(6));
+                            console.log('📦 Stream data:', jsonData.type);
 
                             if (jsonData.type === 'chunk') {
                                 accumulatedText += jsonData.content;
                                 setStreamingMessage(accumulatedText);
                             } else if (jsonData.type === 'done') {
-                                console.log('🎬 K-Content 완료 데이터:', jsonData);
-                                console.log('🗺️ 지도 마커:', jsonData.map_markers);
-                                console.log('🎭 K-Content 결과:', jsonData.kcontents);
+                                console.log('✅ Stream complete:', jsonData);
                                 
-                                const botMessage = {
-                                    type: 'bot',
-                                    content: jsonData.full_response,
-                                    timestamp: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-                                    kcontents: jsonData.kcontents || [],
-                                    has_kcontents: jsonData.has_kcontents || false,
-                                    results: jsonData.results || jsonData.kcontents || [],
-                                    map_markers: jsonData.map_markers || []
+                                finalBotMessage = {
+                                    ...finalBotMessage,
+                                    content: accumulatedText,
+                                    results: jsonData.results || [],
+                                    map_markers: jsonData.map_markers || [],
                                 };
-                                setMessages(prev => [...prev, botMessage]);
-                                setStreamingMessage('');
 
-                                // 🗺️ 지도 마커 처리
-                                if (jsonData.map_markers && jsonData.map_markers.length > 0) {
-                                    console.log('🗺️ 지도 마커 처리 시작:', jsonData.map_markers.length + '개');
-                                    
+                                if (finalBotMessage.map_markers && finalBotMessage.map_markers.length > 0) {
                                     if (window.addMapMarkers) {
-                                        console.log('✅ window.addMapMarkers 호출');
-                                        window.addMapMarkers(jsonData.map_markers);
-                                    } else if (window.addKContentMarkers) {
-                                        console.log('✅ window.addKContentMarkers 호출');
-                                        window.addKContentMarkers(jsonData.map_markers);
+                                        window.addMapMarkers(finalBotMessage.map_markers);
                                     } else {
-                                        console.log('❌ 지도 함수가 등록되지 않음');
+                                        console.log('⚠️ Map function not registered');
                                     }
-                                } else {
-                                    console.log('❌ 지도 마커 데이터 없음');
                                 }
+                                
+                                setMessages(prev => [...prev, finalBotMessage]);
+                                setStreamingMessage('');
+                                return;
 
                             } else if (jsonData.type === 'error') {
                                 throw new Error(jsonData.message);
                             }
                         } catch (e) {
-                            console.error('JSON 파싱 오류:', e);
+                            console.error('JSON parsing error:', e, 'Line:', line);
                         }
                     }
                 }
             }
         } catch (error) {
-            console.error('메시지 전송 오류:', error);
+            console.error('❌ Message send error:', error);
             const errorMessage = {
                 type: 'bot',
                 content: error.message.includes('인증') ? 
-                    'Please log in to continue using K-Drama location search! 🔐' : 
-                    'Sorry, something went wrong. Please try again! 😅',
+                    'Please log in to continue using the service! 🔐' : 
+                    `Sorry, something went wrong. ${error.message} Please try again! 😅`,
                 timestamp: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
             };
             setMessages(prev => [...prev, errorMessage]);
@@ -199,7 +241,6 @@ function Kpop_ChatbotPage() {
         }
     };
 
-    // Enter 키 처리
     const handleKeyPress = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -207,7 +248,6 @@ function Kpop_ChatbotPage() {
         }
     };
 
-    // 태그 클릭 핸들러
     const handleTagClick = (tag) => {
         let query = '';
         switch(tag) {
@@ -223,19 +263,65 @@ function Kpop_ChatbotPage() {
             case 'trending':
                 query = 'What are the trending K-Drama locations right now?';
                 break;
+            case 'kpop-idol':
+                query = 'Recommend K-Pop idol spots or agency buildings';
+                break;
+            case 'best-food':
+                query = 'Recommend the best restaurants near Gangnam station';
+                break;
             default:
                 query = tag;
         }
         handleSendMessage(query);
     };
 
+    // 2. renderMessageContent 함수를 수정하여 results가 있을 경우 ResultCard를 렌더링합니다.
+    // 2. renderMessageContent 함수를 수정하여 results가 있을 경우 ResultCard를 렌더링합니다.
+    const renderMessageContent = (msg) => {
+        // 챗봇 메시지이고, results 배열이 있으며, 최소한 하나의 결과가 있을 때
+        if (msg.type === 'bot' && msg.results && msg.results.length > 0) {
+            
+            // 💡 여기서 results 배열의 첫 번째 항목만 가져옵니다. (카드 한 장만 출력)
+            const firstResult = msg.results[0]; 
+
+            return (
+                <>
+                    {/* 일반 챗봇 응답 텍스트 */}
+                    <div
+                        className="kpop-chatbot-html"
+                        dangerouslySetInnerHTML={{ __html: msg.content }}
+                    />
+                    
+                    {/* ResultCard: 첫 번째 결과만 렌더링합니다. */}
+                    <div className="kpop-results-container">
+                        <ResultCard data={firstResult} />
+                    </div>
+                </>
+            );
+        }
+
+        // 일반 텍스트 메시지 (사용자 메시지 또는 결과가 없는 챗봇 메시지)
+        return (
+            <div
+                className="kpop-chatbot-html"
+                dangerouslySetInnerHTML={{ __html: msg.content }}
+            />
+        );
+    };
+
+    // 3. 기존의 ResultCard 정의 부분을 제거합니다. (상단으로 이동)
+    /* const ResultCard = ({ data }) => {
+        ... (제거됨)
+    };
+    */
+
     return (
         <div className="kpop-main-chat-area">
-            {/* 상단 헤더 */}
+            {/* ... (Header 부분 변경 없음) */}
             <div className="kpop-chat-header">
                 <ArrowBack className="kpop-header-back-icon" />
-                <span className="kpop-chat-title">K-Drama Spotlight</span>
-                <span className="kpop-subtitle">Filming Location Guide</span>
+                <span className="kpop-chat-title">K-Pop Integrated Guide</span>
+                <span className="kpop-subtitle">Seoul Tour & Location Search</span>
                 <div className="kpop-weather-info">
                     <WbSunny className="kpop-weather-icon" />
                     <span>Seoul weather</span>
@@ -245,18 +331,17 @@ function Kpop_ChatbotPage() {
                 </div>
             </div>
 
-            {/* 메시지 영역 */}
             <div className="kpop-message-area">
-                {/* Welcome 화면 - 항상 표시 */}
                 <div className="kdrama-welcome">
+                    {/* ... (Welcome Card 부분 변경 없음) */}
                     <div className="welcome-header">
                         <h1 className="welcome-title">
-                            <span className="title-emoji">🎬</span>
-                            Popular K-Drama Filming Locations
-                            <span className="title-emoji">📺</span>
+                            <span className="title-emoji">🎤</span>
+                            K-Pop & K-Drama Tour Spots
+                            <span className="title-emoji">✨</span>
                         </h1>
                         <p className="welcome-subtitle">
-                            Explore iconic scenes from your favorite dramas!
+                            Explore iconic scenes and idol-approved locations!
                         </p>
                     </div>
 
@@ -292,37 +377,39 @@ function Kpop_ChatbotPage() {
                     </div>
                 </div>
 
-                {/* 채팅 메시지들 */}
+                {/* messages.map: 수정된 renderMessageContent를 사용 */}
                 {messages.map((msg, index) => (
                     <div
                         key={index}
                         className={msg.type === 'user' ? 'kpop-user-message' : 'kpop-chatbot-message'}
                     >
-                        <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                        {/* renderMessageContent가 ResultCard를 포함할 수 있도록 수정됨 */}
+                        {renderMessageContent(msg)}
                         <span className="kpop-timestamp">{msg.timestamp}</span>
                     </div>
                 ))}
                 
                 {streamingMessage && (
                     <div className="kpop-chatbot-message">
-                        <div style={{ whiteSpace: 'pre-wrap' }}>{streamingMessage}</div>
+                        <div
+                            dangerouslySetInnerHTML={{ __html: streamingMessage }}
+                        />
                         <span className="kpop-timestamp typing">Typing...</span>
                     </div>
                 )}
-                
                 <div ref={messageEndRef} />
             </div>
 
-            {/* 하단 제안 및 입력 영역 */}
+            {/* ... (Footer 부분 변경 없음) */}
             <div className="kpop-chat-footer">
                 <div className="kpop-suggested-routes">
-                    <span className="kpop-suggest-title">POPULAR TAGS</span>
+                    <span className="kpop-suggest-title">K-POP TAGS</span>
                     <div className="kpop-tags">
-                        <span className="kpop-tag kpop-tag-kpop" onClick={() => handleTagClick('kdrama')}>
-                            #k-drama
+                        <span className="kpop-tag kpop-tag-kpop" onClick={() => handleTagClick('kpop-idol')}>
+                            #k-pop-idol
                         </span>
-                        <span className="kpop-tag kpop-tag-hotplace" onClick={() => handleTagClick('romantic')}>
-                            #romantic
+                        <span className="kpop-tag kpop-tag-hotplace" onClick={() => handleTagClick('best-food')}>
+                            #best-food
                         </span>
                         <span className="kpop-tag kpop-tag-activity" onClick={() => handleTagClick('historical')}>
                             #historical
@@ -335,7 +422,7 @@ function Kpop_ChatbotPage() {
                 <div className="kpop-input-bar">
                     <input
                         type="text"
-                        placeholder="Ask about your favorite K-Drama filming location..."
+                        placeholder="Ask about your favorite K-Pop spot, restaurant, or drama..."
                         value={inputMessage}
                         onChange={(e) => setInputMessage(e.target.value)}
                         onKeyPress={handleKeyPress}

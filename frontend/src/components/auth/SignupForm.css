@@ -1,0 +1,137 @@
+/* 전체 컨테이너 스타일링 */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6; /* 연한 배경색 */
+    padding: 20px;
+}
+
+/* 로그인/회원가입 박스 스타일링 */
+.auth-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; /* 최대 너비 설정 */
+    box-sizing: border-box;
+}
+
+/* 타이틀 (K-Guidance) */
+.auth-title {
+    text-align: center;
+    color: #0056b3; /* 브랜드 색상 */
+    margin-bottom: 5px;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+/* 서브 타이틀 (Sign Up) */
+.auth-subtitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* 폼 그룹 (라벨과 입력 필드) */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+    outline: none;
+}
+
+/* 기본 버튼 스타일 */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #0056b3; /* 주요 색상 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+/* 버튼 호버/활성화 시 스타일 */
+.btn-primary:hover:not(:disabled) {
+    background-color: #004494;
+}
+
+/* 비활성화된 버튼 스타일 */
+.btn-primary:disabled {
+    background-color: #a0c4e8;
+    cursor: not-allowed;
+}
+
+/* 푸터 텍스트 (로그인 링크) */
+.auth-footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.auth-footer a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ErrorMessage 컴포넌트 (ErrorMessage.js에서 정의되었을 수 있지만, 여기서 기본 스타일 제공) */
+.error-message {
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f8d7da; /* 경고를 나타내는 빨간색 계열 */
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.error-message button {
+    background: none;
+    border: none;
+    color: #721c24;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+}

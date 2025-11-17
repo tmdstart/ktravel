@@ -14,6 +14,7 @@ import ConcertPage from './pages/ConcertPage';
 import KMediaPage from './pages/KMediaPage.jsx';
 import Dashboard from './pages/MydashPage.jsx';
 import UserDashboard from './pages/UserDashboard';
+import Kpop_ChatbotPage from './pages/Kpop_ChatbotPage.jsx';
 
 
 function App() {
@@ -55,6 +56,8 @@ function App() {
                         <Route path="/k-spotlight" element={<KMediaPage />} />
                         <Route path="/dashboard" element={<UserDashboard />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
+
+                        <Route path="/test" element={<Kpop_ChatbotPage />} />
                     </Routes>
                 </main>
             </div>
