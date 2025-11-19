@@ -366,8 +366,8 @@ export default function KMediaDescription({ item, onClose, onAddLocation }) {
                         ))}
                     </div>
 
-                    <h2 className="desc-title-en">{item.title_en || item.title}</h2>
-                    <h3 className="desc-title-ko">{item.title_ko || item.title}</h3>
+                    <h2 className="desc-title-en">{item.location || item.location}</h2>
+                    <h3 className="desc-title-ko">{item.title_en || item.title_en}</h3>
 
                     <p className="desc-description">{item.description} ⭐</p>
 

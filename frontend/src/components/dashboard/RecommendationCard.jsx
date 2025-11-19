@@ -30,20 +30,20 @@ const UserDashboard = () => {
     {
       id: 1,
       image: '/api/placeholder/400/300',
-      title: '경복궁 야간개장',
-      category: '명소',
-      location: '서울 종로구',
-      reason: '고궁의 밤, 한국 전통미를 만끽할 수 있는 특별한 경험',
-      tags: ['야경', '전통', '포토스팟']
+      title: 'loading...',
+      category: 'loading...',
+      location: 'loading...',
+      reason: 'loading...',
+      tags: ['loading...', 'loading...', 'loading...']
     },
     {
       id: 2,
       image: '/api/placeholder/400/300',
-      title: '이태원 클라쓰 촬영지',
-      category: 'K콘텐츠',
-      location: '서울 이태원',
-      reason: '드라마 속 그 장면을 직접 체험해보세요',
-      tags: ['드라마', '핫플', '맛집']
+      title: 'loading...',
+      category: 'loading...',
+      location: 'loading...',
+      reason: 'loading...',
+      tags: ['loading...', 'loading...', 'loading...']
     }
   ];
 
