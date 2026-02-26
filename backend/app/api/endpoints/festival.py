@@ -27,7 +27,7 @@ async def get_festival_by_id(
     """특정 축제 상세 정보 (ORM 버전)"""
     try:
         festival = db.query(Festival).filter(
-            Festival.fastival_id == festival_id
+            Festival.festival_id == festival_id
         ).first()
         
         if not festival:

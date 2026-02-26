@@ -22,7 +22,7 @@ async def add_kmedia_place(
             name=item.name,
             place_type=item.place_type,
             reference_id=item.reference_id,
-            locatoin_name=item.location_name,
+            location_name=item.location_name,
             latitude=item.latitude,
             longitude=item.longitude,
             notes=item.notes or "",

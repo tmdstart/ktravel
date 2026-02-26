@@ -19,7 +19,7 @@ from app.models.restaurant import Restaurant
 # from app.models.attraction import Attraction  # 필요시 주석 해제
 from app.models.festival import Festival
 
-router = APIRouter(prefix="/recommand", tags=["recommand"])
+router = APIRouter(prefix="/recommend", tags=["recommend"])
 
 PLACE_TYPE_COLLECTION_MAP = {
     PlaceType.RESTAURANT: "seoul-restaurant",

@@ -15,8 +15,8 @@ class Restaurant(Base):
     image_path = Column(String(500), nullable=True)
     
     # 좌표
-    Latitude = Column(DECIMAL(10, 8), nullable=True)
-    Longitude = Column(DECIMAL(11, 8), nullable=True)
+    latitude = Column(DECIMAL(10, 8), nullable=True)
+    longitude = Column(DECIMAL(11, 8), nullable=True)
 
     # 지하철/유형
     near_subway = Column(String(255), nullable=True)
@@ -42,8 +42,8 @@ class Restaurant(Base):
             "restaurant_name": self.restaurant_name,
             "place": self.place,
             "image_path": self.image_path,
-            "Latitude": float(self.Latitude) if self.Latitude else None,
-            "Longitude": float(self.Longitude) if self.Longitude else None,
+            "Latitude": float(self.latitude) if self.latitude else None,
+            "Longitude": float(self.longitude) if self.longitude else None,
             "near_subway": self.near_subway,
             "type": self.type,
             "description_clean": self.description_clean,

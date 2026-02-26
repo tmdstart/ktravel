@@ -1,28 +1,24 @@
-#version: '3.8'
-
 services:
-  # # MariaDB 데이터베이스
-  # db:
-  #   image: mariadb:10.11
-  #   container_name: ktravel_db
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: rootpassword
-  #     MYSQL_DATABASE: ktravel
-  #     MYSQL_USER: ktravel_user
-  #     MYSQL_PASSWORD: ktravel_password
-  #   ports:
-  #     - "3307:3306"
-  #   volumes:
-  #     - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-  #     - mariadb_data:/var/lib/mysql
-  #   networks:
-  #     - ktravel_network
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  
+  # PostgreSQL 데이터베이스
+  db:
+    image: postgres:16
+    container_name: ktravel_postgres
+    environment:
+      POSTGRES_DB: ktravel
+      POSTGRES_USER: ktravel_user
+      POSTGRES_PASSWORD: ktravel_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ktravel_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ktravel_user -d ktravel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Redis (세션 저장소)
   redis:
@@ -43,24 +39,26 @@ services:
       dockerfile: Dockerfile
     container_name: ktravel_backend
     environment:
-      - DATABASE_HOST=211.51.163.232
-      - DATABASE_PORT=19306
-      - DATABASE_NAME=lgup2
-      - DATABASE_USER=lgup2
-      - DATABASE_PASSWORD=lgup2P@ssw0rd
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ktravel
+      - DATABASE_USER=ktravel_user
+      - DATABASE_PASSWORD=ktravel_password
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY=your-super-secret-key-change-in-production-min-32-chars
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SESSION_EXPIRE_HOURS=24
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}      # ← 추가
-      - ODSAY_API_KEY=${ODSAY_API_KEY}        # ← 추가
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ODSAY_API_KEY=${ODSAY_API_KEY}
+      - QDRANT_URL=http://qdrant:6333
+      - QDRANT_API_KEY=
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
     depends_on:
-     # db:
-     # condition: service_healthy
+      db:
+        condition: service_healthy
       redis:
         condition: service_started
     networks:
@@ -68,6 +66,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     env_file:
       - .env
+
   # React 프론트엔드
   frontend:
     build:
@@ -80,10 +79,9 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      #- ./frontend:/app
       - /app/node_modules
-      - ./frontend/src:/app/src              # src만 마운트
-      - ./frontend/public:/app/public        # public만 마운트
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
     depends_on:
       - backend
     networks:
@@ -91,15 +89,10 @@ services:
     stdin_open: true
     tty: true
 
-
-
 networks:
   ktravel_network:
     driver: bridge
 
 volumes:
-  mariadb_data:
+  postgres_data:
   redis_data:
-
-
-

@@ -61,3 +61,10 @@ backend/app/schemas/__pycache__/user_schema.cpython-311.pyc
 
 backend/app/schemas/__pycache__/user_schema.cpython-311.pyc
 *.pyc
+
+# Large local data (not for version control)
+qdrant_storage/
+frontend copy/
+
+# Scripts not ready for version control
+db/embed_all.py

@@ -79,27 +79,30 @@ def get_nearby_restaurants(
         # ✅ Haversine 공식: 두 지점 간 거리 계산 (단위: km)
         # 6371 = 지구 반지름 (km)
         query = text("""
-            SELECT 
-                restaurant_id,
-                restaurant_name_en AS name,
-                place_en AS place,
-                image_path,
-                Latitude AS latitude,
-                Longitude AS longitude,
-                near_subway_en AS near_subway,
-                type_en AS type,
-                description_clean_en AS description_clean,
-                (6371 * 1000 * acos(
-                    cos(radians(:lat)) * cos(radians(Latitude)) *
-                    cos(radians(Longitude) - radians(:lng)) +
-                    sin(radians(:lat)) * sin(radians(Latitude))
-                )) AS distance_meters
-            FROM celeb_restaurants
-            WHERE 
-                Latitude IS NOT NULL 
-                AND Longitude IS NOT NULL
-            HAVING distance_meters <= :radius
-            ORDER BY distance_meters ASC
+            SELECT *
+            FROM (
+                SELECT
+                    restaurant_id,
+                    restaurant_name_en AS name,
+                    place_en AS place,
+                    image_path,
+                    latitude,
+                    longitude,
+                    near_subway_en AS near_subway,
+                    type_en AS type,
+                    description_clean_en AS description_clean,
+                    (6371 * 1000 * acos(
+                        cos(radians(:lat)) * cos(radians(latitude)) *
+                        cos(radians(longitude) - radians(:lng)) +
+                        sin(radians(:lat)) * sin(radians(latitude))
+                    )) AS distance_meters
+                FROM celeb_restaurants
+                WHERE
+                    latitude IS NOT NULL
+                    AND longitude IS NOT NULL
+            ) AS sub
+            WHERE sub.distance_meters <= :radius
+            ORDER BY sub.distance_meters ASC
         """)
 
         params = {

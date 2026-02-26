@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 class Settings(BaseSettings):
     # 데이터베이스
     DATABASE_HOST: str = "db"
-    DATABASE_PORT: int = 3306
+    DATABASE_PORT: int = 5432
     DATABASE_NAME: str = "ktravel"
     DATABASE_USER: str = "ktravel_user"
     DATABASE_PASSWORD: str = "ktravel_password"
@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         encoded_password = quote_plus(self.DATABASE_PASSWORD)
-        return f"mysql+pymysql://{self.DATABASE_USER}:{encoded_password}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
+        return f"postgresql+psycopg2://{self.DATABASE_USER}:{encoded_password}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
     
     class Config:
         env_file = ".env"

@@ -5,10 +5,11 @@ from app.core.config import settings
 from fastapi import Depends
 
 # SQLAlchemy 엔진 생성 - settings.DATABASE_URL 사용 (이미 인코딩됨)
-DATABASE_URL = settings.DATABASE_URL + "?charset=utf8mb4"
+DATABASE_URL = settings.DATABASE_URL
 
 engine = create_engine(
     DATABASE_URL,
+    connect_args={"options": "-csearch_path=lgup2"},
     pool_pre_ping=True,
     pool_recycle=300,
     pool_size=10,
